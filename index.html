@@ -2,6 +2,153 @@
 
 <head>
   <title>Gravminne Bjørnafjorden: Veiledning for valg, regelverk og priser</title>
+  <script>
+(() => {
+  'use strict';
+
+  const CONFIG = {
+    // Where to look for the article content
+    root: document.querySelector('#content') || document.body,
+    // Match FAQ section headings (Norwegian + English)
+    faqHeadingPattern: /(ofte\s*stilte\s*sp(?:ø|o)rsm(?:å|a)l|\bfaq\b|frequently\s+asked\s+questions)/i,
+    // Consider these heading levels as possible questions inside a FAQ section
+    questionLevels: new Set([3,4]), // h3, h4
+    // If true, also treat h2 immediately under the FAQ section as questions when no h3/h4 found
+    allowH2QuestionsFallback: true,
+    // Max characters per answer text (0 = unlimited). Set to avoid huge payloads.
+    maxAnswerChars: 0,
+  };
+
+  const onReady = (fn) => {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, { once: true });
+    else fn();
+  };
+
+  const isHeading = (el) => /^H[2-4]$/.test(el.tagName);
+  const levelOf = (el) => parseInt(el.tagName.slice(1), 10);
+
+  // Normalize whitespace a bit, and make </script> safe inside JSON-LD
+  const tidyHTML = (html) => html
+    .replace(/\s+\n/g, ' ')
+    .replace(/\n+/g, ' ')
+    .replace(/\s{2,}/g, ' ')
+    .replace(/<\/script/gi, '<\\/script');
+
+  // Collect nodes after `fromEl` until we hit the next heading with level <= `stopLevel`,
+  // or we reach `sectionEnd`.
+  const collectAnswerNodes = (fromEl, stopLevel, sectionEnd) => {
+    const nodes = [];
+    let el = fromEl.nextElementSibling;
+    while (el && el !== sectionEnd) {
+      if (isHeading(el)) {
+        const lvl = levelOf(el);
+        if (lvl <= stopLevel) break;
+      }
+      nodes.push(el);
+      el = el.nextElementSibling;
+    }
+    return nodes;
+  };
+
+  // Find the element that ends the current FAQ section (the next heading of same/higher rank)
+  const findSectionEnd = (sectionHeading) => {
+    const sectionLevel = levelOf(sectionHeading);
+    let el = sectionHeading.nextElementSibling;
+    while (el) {
+      if (isHeading(el) && levelOf(el) <= sectionLevel) return el;
+      el = el.nextElementSibling;
+    }
+    return null;
+  };
+
+  // Find FAQ section headings (h2/h3/h4 whose text matches faqHeadingPattern)
+  const findFaqSectionHeadings = (root) => {
+    const all = Array.from(root.querySelectorAll('h2, h3, h4'));
+    return all.filter(h => CONFIG.faqHeadingPattern.test((h.textContent || '').trim()))
+              .sort((a,b) => a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1);
+  };
+
+  const extractQAFromSection = (sectionHeading) => {
+    const qa = [];
+    const sectionEnd = findSectionEnd(sectionHeading);
+    // Inside section: prefer h3/h4 as questions
+    const within = [];
+    let el = sectionHeading.nextElementSibling;
+    while (el && el !== sectionEnd) { within.push(el); el = el.nextElementSibling; }
+    const headings = within.filter(isHeading);
+
+    // Choose question headings
+    let questionHeads = headings.filter(h => CONFIG.questionLevels.has(levelOf(h)));
+    if (!questionHeads.length && CONFIG.allowH2QuestionsFallback) {
+      // Fallback: treat h2s inside the section as questions if no h3/h4 found
+      questionHeads = headings.filter(h => levelOf(h) === 2);
+    }
+
+    questionHeads.forEach(h => {
+      const qText = (h.textContent || '').trim();
+      const ansNodes = collectAnswerNodes(h, levelOf(h), sectionEnd);
+      if (!ansNodes.length) return; // must have some content for answer
+      const answerHTML = tidyHTML(ansNodes.map(n => n.outerHTML || n.textContent || '').join('')); // allow basic HTML
+      if (!answerHTML) return;
+
+      let finalAnswer = answerHTML;
+      if (CONFIG.maxAnswerChars > 0 && finalAnswer.length > CONFIG.maxAnswerChars) {
+        finalAnswer = finalAnswer.slice(0, CONFIG.maxAnswerChars) + '…';
+      }
+
+      qa.push({
+        '@type': 'Question',
+        name: qText,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: finalAnswer
+        }
+      });
+    });
+
+    return qa;
+  };
+
+  const alreadyHasFAQ = () => {
+    const scripts = Array.from(document.head.querySelectorAll('script[type="application/ld+json"]'));
+    return scripts.some(s => /"@type"\s*:\s*"FAQPage"/i.test(s.textContent || ''));
+  };
+
+  const injectJSONLD = (faqEntities) => {
+    if (!faqEntities.length) return false;
+    const data = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqEntities
+    };
+    const el = document.createElement('script');
+    el.type = 'application/ld+json';
+    el.setAttribute('data-generated', 'faq');
+    el.textContent = JSON.stringify(data, null, 2);
+    document.head.appendChild(el);
+    return true;
+  };
+
+  onReady(() => {
+    try {
+      if (!CONFIG.root) return;
+      if (alreadyHasFAQ()) { console.info('[FAQ-LD] Existing FAQPage JSON-LD found. Skipping.'); return; }
+
+      const sections = findFaqSectionHeadings(CONFIG.root);
+      if (!sections.length) { console.info('[FAQ-LD] No FAQ section heading found.'); return; }
+
+      const allQA = sections.flatMap(extractQAFromSection).filter(Boolean);
+      if (!allQA.length) { console.info('[FAQ-LD] FAQ section found, but no Q/A pairs detected.'); return; }
+
+      if (injectJSONLD(allQA)) {
+        console.log(`[FAQ-LD] Injected FAQPage JSON-LD with ${allQA.length} entries.`);
+      }
+    } catch (e) {
+      console.warn('[FAQ-LD] Error while generating JSON-LD:', e);
+    }
+  });
+})();
+</script>
 </head>
 
 <body>
