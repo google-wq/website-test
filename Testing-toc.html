@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+
+<head>
+  <title>Gravminne Bjørnafjorden: Veiledning for valg, regelverk og priser</title>
+</head>
+
+<body>
+  <!-- wp:heading {"level":1} -->
+  <h1>Gravminne Bjørnafjorden: Veiledning for valg, regelverk og priser</h1> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Gravminne Bjørnafjorden viser deg hvordan du kan velge et varig og personlig minnesmerke uten stress. Du får
+    praktiske råd om materialer plassering og lokale regler så du kan treffe trygge valg som hedrer dine nærmeste.</p>
+  <!-- /wp:paragraph -->
+  <div id="ToC"></div>
+  
+  <!-- jQuery (load before the script below) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJ+Y6k5R2G8Gk... (trimmed)"
+    crossorigin="anonymous"></script>
+  <!-- wp:paragraph -->
+  <p>I artikkelen guider jeg deg gjennom alternativer prisnivå og gode leverandører i Bjørnafjorden området så du sparer
+    tid og unngår vanlige feil. Du står igjen tryggere i beslutningen og sikrer et gravminne som tåler tidens tann.</p>
+  <!-- /wp:paragraph -->
+  <script>
+    $(function () {
+    var $toc = $('#ToC');
+    if (!$toc.length) return;
+  
+    // Scan inside #content if it exists; else whole page
+    var $root = $('#content').length ? $('#content') : $(document.body);
+    var $headings = $root.find('h2, h3, h4');
+    if (!$headings.length) { $toc.hide(); return; }
+  
+    // Title
+    $('<h2/>', { text: 'Table of contents' }).appendTo($toc);
+  
+    // Make sure each heading has a unique id
+    function translit(s){ return (s||'').replace(/[Ææ]/g,'ae').replace(/[Øø]/g,'o').replace(/[Åå]/g,'a'); }
+    function slugify(text){
+      return translit(text).toLowerCase().trim()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+        .replace(/[^a-z0-9\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-');
+    }
+    $headings.each(function(){
+      if (!this.id) {
+        var base = slugify($(this).text()) || 'seksjon';
+        var id = base, i = 2;
+        while (document.getElementById(id)) id = base + '-' + (i++);
+        this.id = id;
+      }
+    });
+  
+    // Build nested list (reflects h2 > h3 > h4 structure)
+    var minLevel = 2, maxLevel = 4;
+    var currentLevel = minLevel;
+    var $ol = $('<ol class="toc-list"/>');
+    var $current = $ol;
+  
+    $headings.each(function(i, el){
+      var level = Math.min(Math.max(parseInt(el.tagName.substring(1), 10), minLevel), maxLevel);
+      if (i === 0 && level > minLevel) level = minLevel; // don’t start with a gap
+  
+      while (level > currentLevel) {
+        var $lastLi = $current.children('li').last();
+        if (!$lastLi.length) break;
+        var $newOl = $('<ol class="toc-list"/>').appendTo($lastLi);
+        $current = $newOl; currentLevel++;
+      }
+      while (level < currentLevel) {
+        $current = $current.parent().closest('ol.toc-list');
+        currentLevel--;
+      }
+  
+      $('<li/>')
+        .append($('<a/>', { href: '#' + el.id, text: $(el).text() }))
+        .appendTo($current);
+    });
+  
+    $toc.append($ol);
+  });
+  </script>
+  <!-- wp:heading {"level":2} -->
+  <h2>Bjørnafjorden gravminne – og hva er forskjellen på gravminne og gravstein?</h2> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Gravminne betegner alle elementer som markerer en grav mens gravstein betegner en stående eller liggende plate
+    laget av stein. Du velger gravminne for helhetlig uttrykk hvis du vil inkludere sokkel, vaser eller skulptur. Du
+    velger gravstein for enkel markering hvis du ønsker et tradisjonelt utseende.</p><!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>Materialer og holdbarhet</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Materiale: granitt gir lang levetid mens marmor gir mykere overflate.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Overflate: polert overflate reflekterer lys mens slett overflate gir dempet uttrykk.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Vedlikehold: lavt vedlikehold krever granitt i stedet for lys kalkstein.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Regler i Bjørnafjorden</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Kommunal praksis krever godkjenning for størrelse og plassering (Bjørnafjorden kommune 2024).</li>
+    <!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Gravferdsloven regulerer fellesnormer for innskrift og materiale (Lovdata 2024).</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Kirkelige og ikke-kirkelige felt har ulike krav når det gjelder utsmykning og feste av gjenstander.</li>
+    <!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Designvalg og personlighet</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Tekst: navn og fødselsdato gir identitet mens korte sitater gir emosjon.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Symboler: kors, hjerte eller sjømotiv knytter minnet til tro eller lokal kultur.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Farge: mørk granitt fremhever gullinnskrift mens lys stein gir dempet kontrast.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Priser og typiske tall</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Prisintervall for gravstein er 15 000–60 000 NOK avhengig av størrelse og finish.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Tilleggsarbeid som fundament og montering koster ofte 3 000–12 000 NOK.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Vedlikeholdsavtaler fra leverandører varer vanligvis 1–5 år.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Produktoversikt</p><!-- /wp:paragraph -->
+  <table style="min-width: 75px">
+    <colgroup>
+      <col style="min-width: 25px">
+      <col style="min-width: 25px">
+      <col style="min-width: 25px">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Egenskap</th>
+        <th>Gravminne</th>
+        <th>Gravstein</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Typisk materialvalg</td>
+        <td>granitt granittblanding skulpturmateriale</td>
+        <td>granitt marmor skifer</td>
+      </tr>
+      <tr>
+        <td>Vanlig størrelse</td>
+        <td>sokkel 40–80 cm høyde</td>
+        <td>plate 60–120 cm høyde</td>
+      </tr>
+      <tr>
+        <td>Typisk prisnivå</td>
+        <td>20 000–100 000 NOK</td>
+        <td>15 000–60 000 NOK</td>
+      </tr>
+      <tr>
+        <td>Vedlikehold</td>
+        <td>moderat til lavt</td>
+        <td>lavt til moderat</td>
+      </tr>
+    </tbody>
+  </table><!-- wp:paragraph -->
+  <p>Praktiske råd til deg</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Sjekk kommuneinformasjon før bestilling hvis du vil unngå avslag.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Be om skriftlig mål og 3D-skisse hvis du vil se plassering før montering.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Velg leverandør med dokumentert erfaring i Vestland hvis du vil sikre lokal kjennskap.</li>
+    <!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Lovdata Lov om gravferd og gravplassforvaltning (Lovdata 2024).</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Bjørnafjorden kommune retningslinjer for gravplasser (Bjørnafjorden kommune 2024).</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Lokale stenhuggere og leverandører gir prisoverslag og referanser ved forespørsel.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:heading {"level":2} -->
+  <h2>Hva koster et gravminne i Bjørnafjorden?</h2> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Prisbildet for gravminner i Bjørnafjorden varierer med materiale, størrelse, utforming og arbeidstimer. Du får
+    enklere standardminner fra lave prisklasser og spesiallagde monumenter i høyere prisklasser. Lokale regler kan
+    påvirke pris ved krav om bestemt størrelse eller feste. (Kilde: Bjørnafjorden kommune, gravferdsforskrifter)</p>
+  <!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>Prisoversikt</p><!-- /wp:paragraph -->
+  <table style="min-width: 75px">
+    <colgroup>
+      <col style="min-width: 25px">
+      <col style="min-width: 25px">
+      <col style="min-width: 25px">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Type gravminne</th>
+        <th>Typisk prisintervall (NOK)</th>
+        <th>Kommentar</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Standard granittplate</td>
+        <td>8 000–25 000</td>
+        <td>Enkel polering og standard tekst</td>
+      </tr>
+      <tr>
+        <td>Oppreist granittstein</td>
+        <td>20 000–60 000</td>
+        <td>Størrelse og finish avgjør prisen</td>
+      </tr>
+      <tr>
+        <td>Marmor eller spesialstein</td>
+        <td>30 000–90 000</td>
+        <td>Høy slitasje ved kystklima krever vedlikehold</td>
+      </tr>
+      <tr>
+        <td>Skreddersydd design</td>
+        <td>50 000–200 000+</td>
+        <td>Inkluderer symboler, utskjæringer og fargedetaljer</td>
+      </tr>
+      <tr>
+        <td>Mindre minnesmerker</td>
+        <td>3 000–10 000</td>
+        <td>Plater, blomsterkasser eller sokler</td>
+      </tr>
+    </tbody>
+  </table><!-- wp:paragraph -->
+  <p>Tilleggskostnader du møter</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Pris for transport. Mange leverandører fakturerer for frakt av tung stein fra verksted til gravplass.</li>
+    <!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Pris for montering. Montering på gravplass krever tid og spesialutstyr.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Pris for fundament. Betongfundament øker levetid men koster mer.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Pris for gravering. Tekst og symboler prises per tegn eller per time.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Pris for godkjenning. Kommunale gebyrer kan forekomme ved større endringer.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Tabell: vanlige tilleggskostnader</p><!-- /wp:paragraph -->
+  <table style="min-width: 50px">
+    <colgroup>
+      <col style="min-width: 25px">
+      <col style="min-width: 25px">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Tjeneste</th>
+        <th>Omtrentlig pris (NOK)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Montering</td>
+        <td>2 000–8 000</td>
+      </tr>
+      <tr>
+        <td>Transport innland</td>
+        <td>500–5 000</td>
+      </tr>
+      <tr>
+        <td>Fundament</td>
+        <td>3 000–12 000</td>
+      </tr>
+      <tr>
+        <td>Gravering per linje</td>
+        <td>300–1 200</td>
+      </tr>
+      <tr>
+        <td>Restaurering og vedlikehold årlig</td>
+        <td>200–1 500</td>
+      </tr>
+    </tbody>
+  </table><!-- wp:paragraph -->
+  <p>Hva som påvirker prisen mest</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Materialvalg. Granitt koster mindre per levetid enn marmor ved kystklima.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Størrelse. Større stein krever mer råmateriale og mer arbeid.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Designkompleksitet. Utskjæringer og fargeinnlegg øker arbeidstimer.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Lokale krav. Kirkegårdsregler i Bjørnafjorden kan begrense mål og utførelse.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Leverandør. Lokale stenhoggere tilbyr ofte rimeligere montering enn eksterne selskaper.</li>
+    <!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Praktiske råd før du bestiller</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Velg materiale med tanke på kystklima hvis gravsted ligger nær sjø.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Sammenlign minst 3 skriftlige tilbud fra lokale leverandører.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Be om referanser fra Bjørnafjorden eller Vestland-kirkegårder.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Sjekk kommunale regulativer hos Bjørnafjorden kommune før bestilling.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Beregn buffer på 10–20 prosent for uforutsette arbeider.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Bjørnafjorden kommune gravferdsregler og gebyroversikt.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Forbrukerrådet gravferd og prisveiledning.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:heading {"level":2} -->
+  <h2>Slik velger du riktig gravstein</h2> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Dette avsnittet gir konkrete steg som hjelper deg å velge gravstein som passer regler, bruk og personlige krav.</p>
+  <!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>1) Avklar gravplassregler i Bjørnafjorden</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Sjekk kommunale krav før du bestiller. Bjørnafjorden kommune setter regler for størrelse, høyde og festemetode og
+    krever ofte skriftlig godkjenning (Bjørnafjorden kommune regelverk). Les Gravferdsloven for juridiske krav spesielt
+    §16 om gravminner (Lov om gravferd). Kontakt gravplassforvaltningen fysisk eller via e-post for å få mål og
+    godkjenningsprosess. Be om skriftlig bekreftelse hvis du får muntlig rådføring.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>2) Velg materiale ut fra bruksbehov</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Velg granitt ved krav til holdbarhet og lavt vedlikehold. Velg marmor hvis du prioriterer utseende og er villig til
+    å vedlikeholde. Velg bronse for detaljer og innfelt dekor. Vurder frostbestandighet i Bjørnafjorden klimaet og velg
+    materiale med lav porøsitet. Be leverandøren om dokumentasjon på frosttest og garanti. Få prøveprøver eller bilder
+    fra utførte jobber i regionen.</p><!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>Materiale sammenligning</p><!-- /wp:paragraph -->
+  <table style="min-width: 100px">
+    <colgroup>
+      <col style="min-width: 25px">
+      <col style="min-width: 25px">
+      <col style="min-width: 25px">
+      <col style="min-width: 25px">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Materiale</th>
+        <th>Holdbarhet</th>
+        <th>Vedlikehold</th>
+        <th>Typisk prisnivå</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Granitt</td>
+        <td>50+ år</td>
+        <td>Lav</td>
+        <td>10 000–40 000 NOK</td>
+      </tr>
+      <tr>
+        <td>Marmor</td>
+        <td>20–40 år</td>
+        <td>Høy</td>
+        <td>12 000–45 000 NOK</td>
+      </tr>
+      <tr>
+        <td>Bronse</td>
+        <td>50+ år</td>
+        <td>Lav</td>
+        <td>8 000–30 000 NOK</td>
+      </tr>
+    </tbody>
+  </table><!-- wp:paragraph -->
+  <p>Kilder: leverandørdata og materialstandarder for stein.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>3) Planlegg inskripsjon og symbolikk i Bjørnafjorden</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Velg tekststil som er lesbar på avstand og som tåler vær. Velg mønster og symboler som har personlig eller lokal
+    betydning for deg for eksempel fjordmotiv, navn på lokale steder, eller årstall. Sjekk kommunens retningslinjer for
+    størrelsesbegrensning på inskripsjon. Velg graveringsteknikk etter materiale. Maskingravering gir skarp tekst på
+    granitt. Håndgravering eller sandblåsing gir kunstnerisk uttrykk.</p><!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>Eksempler på inskripsjoner</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Navn, fødsels- og dødsår</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Kort personlig tekst, 10–20 ord</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Symboler som kors, bølger, eller båt</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:heading {"level":3} -->
+  <h3>4) Bestill, produser og lever i Bjørnafjorden</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Velg lokal leverandør for enklere montering og etterservice. Sammenlign 3 tilbud for pris, leveringstid og
+    garantier. Avtal skriftlig leveringstid og monteringstidspunkt. Sørg for at leverandøren søker nødvendig godkjenning
+    hvis du vil at de skal gjøre det. Godta eller krev sluttkontroll ved montering. Be om bilder fra ferdig montering og
+    dokument for betalt arbeid.</p><!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>Sjekkliste før bestilling</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Bekreftet mål fra gravplassforvaltning</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Materiale og farge valgt</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Tegning og inskripsjon godkjent skriftlig</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Pris med detaljer for transport og montering</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Garanti og vedlikeholdsinstruksjoner</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Les mer om lokale leverandører og eksempler på utførte prosjekter hvis du vil se alternativer og pris eksempler i
+    Bjørnafjorden.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":2} -->
+  <h2>Materialer og egenskaper</h2> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Velg materialer som gir varig uttrykk for gravminne Bjørnafjorden. Her følger konkrete forskjeller som hjelper deg
+    å vurdere holdbarhet, vedlikehold og pris.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Sammenligning av vanlige materialvalg</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Velg materiale basert på ønsket levetid, estetikk og vedlikeholdsgrad. Tabellen nedenfor gir kjappe tall for
+    holdbarhet og prisintervall i Norge.</p><!-- /wp:paragraph -->
+  <table style="min-width: 100px">
+    <colgroup>
+      <col style="min-width: 25px">
+      <col style="min-width: 25px">
+      <col style="min-width: 25px">
+      <col style="min-width: 25px">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Materiale</th>
+        <th>Estimert holdbarhet</th>
+        <th>Typisk pris per m² (NOK)</th>
+        <th>Eksempel</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Granitt</td>
+        <td>50–200 år</td>
+        <td>6 000–18 000</td>
+        <td>Larvikitt, Bohus granitt</td>
+      </tr>
+      <tr>
+        <td>Skifer</td>
+        <td>30–100 år</td>
+        <td>4 000–12 000</td>
+        <td>Oppdal skifer</td>
+      </tr>
+      <tr>
+        <td>Bronse (detaljer)</td>
+        <td>70–150 år</td>
+        <td>10 000–25 000</td>
+        <td>Plaketter fra Brun&amp;Co</td>
+      </tr>
+      <tr>
+        <td>Rustfritt stål (detaljer)</td>
+        <td>40–120 år</td>
+        <td>5 000–15 000</td>
+        <td>AISI 316 produsenter i Bergen</td>
+      </tr>
+    </tbody>
+  </table><!-- wp:heading {"level":4} -->
+  <h4>Granitt:</h4> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Velg granitt for maksimal holdbarhet og lavt vedlikehold. Granitt tåler frost, salt og mekanisk slitasje godt, og
+    den beholder gravminne Bjørnafjorden sitt uttrykk over generasjoner hvis du utfører enkel rengjøring årlig.
+    Larvikitt og Bohus granitt gir varierende fargepalett for personlig preg.</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Fordeler: Lang levetid, minimal nedbrytning, egnet for gravering dypt.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Ulemper: Høyere pris, tung vekt øker monteringskostnader.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Vedlikehold: Rengjør med mildt såpevann og myk børste hvert 12. måned.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:heading {"level":4} -->
+  <h4>Skifer:</h4> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Velg skifer for mørkt, dempet uttrykk og naturlig tekstur. Skifer gir organisk preg på gravminne Bjørnafjorden men
+    krever mer oppfølging ved fuktige klima. Oppdal skifer gir stabile flater men kan flise ved kantene over tid.</p>
+  <!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Fordeler: Estetisk blindt uttrykk, rimeligere enn granitt.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Ulemper: Mer porøs, risiko for flising og fargeendring.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Vedlikehold: Etterse fuger og forsegl med pH-nøytral impregnering hvert 3–5 år.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:heading {"level":4} -->
+  <h4>Bronse (detaljer):</h4> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Velg bronse for detaljer, navnplater eller relieff som står i kontrast til stein. Bronse gir patina over tid som
+    mange oppfatter som verdifullt for gravminne Bjørnafjorden fordi patina skaper varme toner hvis du aksepterer
+    naturlig oksidasjon. Bruk legeringer med høy kobberandel for dyp farge.</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Fordeler: Høy detaljgjengivelse, elegant kontrast til stein.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Ulemper: Kostbart, krever fagmessig montering og løpende overflatepleie.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Vedlikehold: Poler eller påfør voks hvert 5–10 år for å styre patinering.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:heading {"level":4} -->
+  <h4>Rustfritt stål (detaljer):</h4> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Velg rustfritt stål for moderne, minimalistisk uttrykk og høy korrosjonsbestandighet. Rustfritt stål gir lavt
+    vedlikehold for gravminne Bjørnafjorden og tåler kystklima godt hvis du velger AISI 316 materialkvalitet. Satin
+    eller slipt finish reduserer blending og fingermerker.</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Fordeler: Resistens mot korrosjon, slank estetikk, lav vekt sammenlignet med stein.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Ulemper: Kan gi kaldt inntrykk, synlige riper ved feil behandling.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Vedlikehold: Skyll med ferskvann ved salt eksponering og poler lett ved behov.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Koble disse materialvalgene til lokale leverandører som Bergen Gravminner eller Sotra Stenhuggeri for
+    pristilpassede tilbud og montering i Bjørnafjorden kommune, og kontakt kirkegårdsforvaltningen for godkjenning av
+    materiale og finish før bestilling.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":2} -->
+  <h2>Bjørnafjorden Design og tilpasning</h2> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Her får du konkrete retningslinjer for form, størrelse, innskrift og symbolbruk som passer gravplasser i
+    Bjørnafjorden. Følg kommunale regler og lokale leverandører for godkjenning og utførelse.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Form, størrelse og proporsjoner</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Velg form etter gravplassens uttrykk og gravminnets materiale, men husk at kommunen krever godkjenning hvis
+    størrelse eller høyde avviker fra standard (se Bjørnafjorden kommune kirkegårdsreglement:
+    https://www.bjornfjorden.kommune.no).</p><!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>Velg liggende stein for et lavt, dempet uttrykk hvis plassen krever ensartethet. Velg stående stein for synlighet
+    langs gangarealer. Velg sokkel ved ujevnt terreng eller ved større monumenter.</p><!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>Standardmål for vanlige gravminner i Bjørnafjorden:</p><!-- /wp:paragraph -->
+  <table style="min-width: 100px">
+    <colgroup>
+      <col style="min-width: 25px">
+      <col style="min-width: 25px">
+      <col style="min-width: 25px">
+      <col style="min-width: 25px">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Bredde (cm)</th>
+        <th>Høyde (cm)</th>
+        <th>Anbefalt materiale</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Enkelt liggende</td>
+        <td>60</td>
+        <td>8–12</td>
+        <td>granitt, skifer</td>
+      </tr>
+      <tr>
+        <td>Dobbelt liggende</td>
+        <td>120</td>
+        <td>8–12</td>
+        <td>granitt</td>
+      </tr>
+      <tr>
+        <td>Stående enkel</td>
+        <td>70</td>
+        <td>60–90</td>
+        <td>granitt, marmor</td>
+      </tr>
+      <tr>
+        <td>Stående dobbel</td>
+        <td>140</td>
+        <td>60–120</td>
+        <td>granitt</td>
+      </tr>
+    </tbody>
+  </table><!-- wp:paragraph -->
+  <p>Tabellen reflekterer mål brukt av lokale stenhuggere som Bergen Gravminner og Sotra Stenhuggeri.</p>
+  <!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>Sørg for proporsjon mellom tekstflate og steinens synlige område. Plasser tekst midt på feltet hvis du velger
+    tradisjonell layout. Plasser dekor til høyre eller venstre hvis du ønsker asymmetri, men be om kommunal godkjenning
+    dersom dekor reduserer lesbarheten.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Inskripsjon og typografi i Bjørnafjorden</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Velg skrifttype etter lesbarhet og varighet. Sans-serif gir moderne preg og god lesbarhet på polert granitt. Serif
+    gir klassisk preg på lys marmor. Hold skriftstørrelse på minst 30 mm for navn og 18 mm for datoer for å sikre
+    lesbarhet etter flerårig værslitasje. Begrens navn til 2 linjer og tilleggstekst til 3 linjer for å unngå trang
+    layout.</p><!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>Typografiske regler du kan følge:</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Navn: store bokstaver hvis du vil ha formell profil.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Datoer: kort format (f.eks. 12.03.1950–04.07.2020).</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Sitat: kursiv ved inskripsjon hvis du vil skille det fra navn og dato.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Be leverandøren om prøvegravering i skala 1:1 før endelig ordre. Begravelsesadministrasjonen i Bjørnafjorden krever
+    ofte skisse og mål ved søknad om endring (kilde: Bjørnafjorden kommune).</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Symboler, bilde og minneplate</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Velg symboler som reflekterer personlig historie, men hold dem enkle for varig visuell klarhet. Kors, hjerte og
+    anker fungerer bra i små formater. Fotogravering i porselen holder detaljer de første 10–15 årene, mens
+    lasergravering i bronse gir lengre varighet. Velg bronseplate for tekst i høy kontrast hvis steinen har mørk farge.
+  </p><!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>Liste over vanlige elementer og egenskaper:</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Bronseplate: varig, høy kontrast, egner seg til detaljerte portretter.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Lasergravering: slitesterk, egner seg for fine linjer og symboler.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Porselensfoto: høy detaljgrad, moderat værbestandighet.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Prisindikasjon for ekstraarbeid (eksempel fra lokale leverandører):</p><!-- /wp:paragraph -->
+  <table style="min-width: 50px">
+    <colgroup>
+      <col style="min-width: 25px">
+      <col style="min-width: 25px">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Arbeid</th>
+        <th>Omtrentlig pris (NOK)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Bronseplate med gravering</td>
+        <td>6 000–18 000</td>
+      </tr>
+      <tr>
+        <td>Fotogravering i porselen</td>
+        <td>2 500–6 000</td>
+      </tr>
+      <tr>
+        <td>Lasergravering detalj</td>
+        <td>1 500–8 000</td>
+      </tr>
+    </tbody>
+  </table><!-- wp:paragraph -->
+  <p>Spør alltid om garanti og vedlikeholdsveiledning fra leverandøren før bestilling.</p><!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>Kontakt lokale stenhuggere som Bergen Gravminner eller Sotra Stenhuggeri for prøver og referanser, og legg ved mål
+    og skisser når du sender søknad til Bjørnafjorden kirkegårdsforvaltning.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":2} -->
+  <h2>Regler og godkjenning på kirkegård i Bjørnafjorden</h2> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Regler og godkjenning på kirkegård i Bjørnafjorden beskriver krav til størrelse form og materialvalg når du
+    bestiller gravminne. Du må søke kirkegårdsforvaltningen for endelig godkjenning før montering. Lovgrunnlaget finnes
+    i gravferdsloven og lokale vedtekter hos Bjørnafjorden kommune. Kilder: Lovdata.no Gravferdsloven og
+    bjornfjorden.kommune.no</p><!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>Hvem du kontakter</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Kontakt: kirkegårdsforvaltningen i Bjørnafjorden for søknad og plassering</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Kontakt: lokal presteordning for kirkelige gravplasser når religiøse symboler gjelder</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Kontakt: stenhugger ved tekniske spørsmål om fundament og løfteutstyr</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Form og størrelse</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Mål: enkel erect minnestøtte har vanlig maksimalhøyde 100 cm og bredde 60 cm ved mange plasser</li>
+    <!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Mål: liggende plate har vanlig mål 60 x 30 cm som standardalternativ</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Mål: familiegrav kan ha større mål men krever skriftlig godkjenning</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Materiale og overflate</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Materiale: granitt gir lang holdbarhet og krever lite vedlikehold</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Materiale: bronse brukes for detaljer som plater og ornamenter</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Materiale: skifer gir dempet uttrykk men krever jevnlig behandling</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Skiltbegrensninger og tekst</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Tekst: lesbarhet må ivaretas ved valg av skrifttype størrelse og dybde</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Tekst: personopplysninger må følge personopplysningsloven ved offentlig publisering</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Tekst: religiøse symboler vurderes etter kirkegårdens regler</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Søknadsprosess og frister</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Send: søknad digitalt eller på papir til Bjørnafjorden kirkelige fellesråd</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Vedlegg: måltegning fotografi materialebeskrivelse og faglig erklæring fra leverandør</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Tid: behandling tar typisk 2 til 6 uker avhengig av kompleksitet</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Kostnader og ansvar</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Avgift: kommunen kan kreve gebyr for godkjenning og plassering</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Ansvar: du eller bestiller er ansvarlig for transport montering og sikring</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Forsikring: sørg for ansvarsforsikring fra leverandør ved montering</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Tabell over standardmål og eksempler på godkjente varianter</p><!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>| Type gravminne | Standardmål cm | Eksempel på bruk
+    |<br>| Enkel stående | H 100 x B 60 | Enkelt familiemedlem |<br>| Liggende plate | L 60 x B 30 | Enkel navneplate |<br>| Familieplate | L 120 x B 60 | To navn eller familie |<br>| Bronseplate | Varierende | Detaljer og pålimte navn |
+  </p><!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>Henvisninger og ressurser</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Lovverk: Gravferdsloven kapittel 3 og relevante forskrifter Lovdata.no</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Lokal praksis: Bjørnafjorden kommune kirkegårdsforvaltning bjornfjorden.kommune.no</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Leverandører: Bergen Gravminner Sotra Stenhuggeri for prøveeksempler og referanser</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Dokumenter: lever måltegning i målsettet format når du sender søknad</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Velg: leverandør med dokumentert erfaring og lokal referanseliste</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Avklar: fundamentkrav med kirkegårdsforvaltningen før bestilling av arbeid</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:heading {"level":2} -->
+  <h2>Miljøvennlige og varige valg</h2> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Velg materialer som tåler klimaet i Bjørnafjorden når du prioriterer lang levetid og lavt vedlikehold. Granitt gir
+    høy motstand mot slitasje hvis du ønsker minimal vedlikeholdsinnsats. Skifer gir dempet uttrykk hvis du foretrekker
+    naturlig patina. Bronse gir detaljer som varer hvis du vil ha markerte elementer. Rustfritt stål gir moderne uttrykk
+    hvis du ønsker korrosjonsbestandighet.</p><!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>Velg lokal steinleverandør for kortere transportvei og lavere CO2-utslipp. Bergen Gravminner og Sotra Stenhuggeri
+    tilbyr kort leveringstid og lokal montering. Kontakt kirkegårdsforvaltningen i Bjørnafjorden for godkjenning før
+    bestilling.</p><!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>Bruk overflatebehandling som reduserer vedlikehold uten å endre estetikk. Polering gjør inskripsjon tydeligere hvis
+    du vil ha lett avlesbar tekst. Impregnering hemmer flekker hvis du vil redusere behovet for rengjøring.</p>
+  <!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>Velg monteringsmetoder som tåler frost og jordpress. Innstøpte sokler gir stabilitet hvis du planlegger plassering
+    i fuktig terreng. Boltmontering gir fleksibilitet hvis du ønsker enklere utskifting.</p><!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>Vedlikeholdsplan for levetid og estetikk</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Velg årlig inspeksjon for skjolder og mose hvis du ønsker tidlig oppdagelse av slitasje.</li>
+    <!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Velg profesjonell rengjøring hvert 3–5 år hvis du vil bevare overflate og innskrifter.</li>
+    <!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Velg lokale fagfolk for reparasjon hvis du vil sikre kompatible materialer og finish.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Materialeoversikt med holdbarhet og vedlikehold</p><!-- /wp:paragraph -->
+  <table style="min-width: 75px">
+    <colgroup>
+      <col style="min-width: 25px">
+      <col style="min-width: 25px">
+      <col style="min-width: 25px">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Materiale</th>
+        <th>Forventet levetid</th>
+        <th>Vedlikehold</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Granitt</td>
+        <td>50+ år</td>
+        <td>Rengjøring 3–5 år og lett impregnering</td>
+      </tr>
+      <tr>
+        <td>Skifer</td>
+        <td>30–60 år</td>
+        <td>Fjerning av mose årlig og lokalt reparasjonsvedlikehold</td>
+      </tr>
+      <tr>
+        <td>Bronse</td>
+        <td>50+ år</td>
+        <td>Polering ved behov og kontroll av patina</td>
+      </tr>
+      <tr>
+        <td>Rustfritt stål</td>
+        <td>40+ år</td>
+        <td>Skylling etter saltsprut og punktvis polering</td>
+      </tr>
+    </tbody>
+  </table><!-- wp:paragraph -->
+  <p>Referanser og regelverk</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Gravferdsloven regulerer godkjenning av gravminner i kommunal forvaltning.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Miljødirektoratet gir retningslinjer for materialbruk og miljøpåvirkning.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Norsk Stenhuggerforening gir faglige standarder for utførelse og materialvalg.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Kontakt kirkegårdsforvaltningen i Bjørnafjorden for mål og godkjenningskrav.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Be om prøver fra Bergen Gravminner eller Sotra Stenhuggeri før beslutning.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Be om dokumentasjon på materialets opprinnelse og vedlikeholdsråd for levetidsberegning.</li>
+    <!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:heading {"level":2} -->
+  <h2>Leveringstid og prosess i Bjørnafjorden</h2> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Typiske leveringstider varierer med materialvalg, design og kommunal godkjenning. Standard granittplater leveres
+    raskere mens skreddersydde bronsedetaljer tar lengre tid.</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Bestill 8–12 uker før ønsket monteringsdato for standardarbeid.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Bestill 12–20 uker før for tilpassede design eller utenlandske materialer.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Kontakt kirkegårdsforvaltningen først, fordi godkjenning kan ta 2–6 uker.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Velg lokal leverandør for kortere transport og enklere etterservice.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Prosessens hovedtrinn følger en fast rekkefølge. Du får oversikt ved å følge disse stegene.</p>
+  <!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":true} -->
+  <ol>
+    <!-- wp:list-item -->
+    <li>Mål og skisse leveres, fordi kommunen krever dokumentasjon.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Design bekreftes, fordi gravtekst og symboler må godkjennes.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Produksjon starter, fordi materialvalg og gravering påvirker tid.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Transport og montering planlegges, fordi adgang og årstid påvirker logistikken.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Sluttkontroll utføres, fordi kirkegård eller leverandør må godkjenne ferdig arbeid.</li><!-- /wp:list-item -->
+  </ol> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Tabell over typiske leveringstider</p><!-- /wp:paragraph -->
+  <table style="min-width: 75px">
+    <colgroup>
+      <col style="min-width: 25px">
+      <col style="min-width: 25px">
+      <col style="min-width: 25px">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Type arbeid</th>
+        <th>Leveringstid</th>
+        <th>Vanlig årsak</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Standard granittplate</td>
+        <td>6–12 uker</td>
+        <td>Lagermateriale, enkel gravering</td>
+      </tr>
+      <tr>
+        <td>Tilpasset design med bronse</td>
+        <td>12–20 uker</td>
+        <td>Støping, spesialgravering</td>
+      </tr>
+      <tr>
+        <td>Restaurering eller oppussing</td>
+        <td>4–8 uker</td>
+        <td>Tilstandsvurdering, materialtilgang</td>
+      </tr>
+      <tr>
+        <td>Ekspressbestilling</td>
+        <td>2–4 uker</td>
+        <td>Ekstra kostnad, begrenset utvalg</td>
+      </tr>
+    </tbody>
+  </table><!-- wp:paragraph -->
+  <p>Faktorer som forlenger tid</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Sesong: vinterarbeid kan stoppe montering.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Godkjenning: manglende dokumentasjon gir forsinkelse.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Transport: lang distanse gir ekstra ukers levering.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Materialmangel: importert stein gir lengre ventetid.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Praktiske råd for deg</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Kontakt Bjørnafjorden kommune tidlig, fordi lokale vedtekter styrer størrelse og plassering. (Kilde:
+      Bjørnafjorden kommune)</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Be om skriftlig produksjonsplan fra leverandør, fordi det gir ansvarlig tidslinje.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Sjekk referanser hos lokale stenhuggere som Bergen Gravminner eller Sotra Stenhuggeri, fordi erfaring reduserer
+      feil.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Planlegg montering utenfor verste regnperioder, fordi vær kan utsette kranarbeid.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Retningslinjer og regelverk</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Følg gravferdsloven og kommunale vedtekter, fordi de fastsetter ansvar og godkjenningsprosess. (Kilde: Lovdata)
+    </li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Lever måltegning og materialdokumentasjon ved søknad, fordi manglende dokumenter stopper behandlingen.</li>
+    <!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Kontakt og kommunikasjon</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Be om detaljert tilbud med tidsestimater.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Avklar hvem som ordner graving og fundament.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Avtal sluttdato for ferdigstillelse skriftlig.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Bjørnafjorden kommune: lokale vedtekter for gravplasser.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Lovdata: gravferdsloven.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Norsk Stenhuggerforening: produksjons- og materialstandarder.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:heading {"level":2} -->
+  <h2>Vedlikehold og restaurering</h2> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Inspeksjon og tidsplan</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Utfør visuell inspeksjon hver 6. måned for sprekker mose og løse deler.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Bestem faglig kontroll hvert 3. år hvis gravminnet står utsatt til vær og vind.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Dokumenter tilstand med bilder ved hver inspeksjon for søknader og garantier.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Rengjøring etter materiale</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Granitt: Bruk mildt pH-nøytralt rengjøringsmiddel og myk børste. Skyll grundig.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Skifer: Bruk kaldt vann og myk børste unngå høytrykk.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Bronse: Bruk avfetting og polering beregnet for kobberlegeringer unngå slipemidler.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Rustfritt stål: Bruk ikke-klorholdig rengjøringsmiddel og mikrofiberduk.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Profesjonell restaurering trinnvis</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":true} -->
+  <ol>
+    <!-- wp:list-item -->
+    <li>Vurdering av skade utfør fagpersonell med dokumentert erfaring.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Stabilisering bruk rustfrie forankringer eller epoxy der materialet krever det.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Reparasjon bruk kompatible materialer for å unngå galvanisk korrosjon.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Konservering påfør beskyttende behandling godkjent for kirkegårder.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Sluttkontroll dokumenter arbeid og ta nye bilder.</li><!-- /wp:list-item -->
+  </ol> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Tillatelser og regelverk</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Kontakt Bjørnafjorden kirkegårdsforvaltning før større inngrep. Kommunale vedtekter regulerer endringer og
+      restaurering (Gravferdsloven §16).</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Send måltegning og materialbeskrivelse hvis du endrer feste eller høyde.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Oppbevar godkjenning på e-post eller papir under hele prosjektet.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Vedlikeholdsbudsjett og
+    hyppighet<br>| Tiltak | Frekvens | Estimert kostnad (NOK) | Utfører |<br>| Rengjøring enkel | 6 måneder | 300–800 | Du eller lokal vaktmester |<br>| Rens og konservering | 3 år | 1 500–5 000 | Stenhuggeri eller konservator |<br>| Mindre reparasjon | 5–10 år | 2 000–10 000 | Lokalt stenhuggeri som Bergen Gravminner eller Sotra Stenhuggeri |<br>| Full restaurering | 15–30 år | 10 000–60 000 | Spesialisert konservator eller stenhugger |
+  </p><!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>Forebyggende tiltak du kan gjøre</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Plasser avstand mellom gravminne og busker for å redusere fuktoppsamling.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Unngå saltbasert smeltemiddel på gangareal nær stein.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Bruk drenerende underlag ved montering for å minske frostskader.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Sikkerhet og ansvar</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Sikre området før arbeid hvis du bruker verktøy som løfter eller sementblander.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Overlat bæring og montering av tunge elementer til fagfolk for å unngå skader.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Sørg for kontrakt som beskriver arbeid garanti og reklamasjonsrett.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Gravferdsloven og kommunale vedtekter for Bjørnafjorden gir rettslig ramme for arbeid på gravminner
+      (Kirkedepartementet).</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Norske stenhuggerier som Bergen Gravminner og Sotra Stenhuggeri tilbyr dokumenterte tjenester og referanser for
+      restaurering.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:heading {"level":2} -->
+  <h2>Ofte stilte spørsmål (FAQ)</h2> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Her finner du korte, presise svar på vanlige spørsmål om gravminne i Bjørnafjorden. Materialene refererer til
+    lokale leverandører og gjeldende regelverk.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Hva koster et gravminne i Bjørnafjorden?</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Prisene varierer med materiale, størrelse og arbeid. Standard granittplate koster typisk 12 000–30 000 NOK.
+    Skreddersydd design med bronsedetaljer koster ofte 40 000–120 000 NOK.</p><!-- /wp:paragraph -->
+  <table style="min-width: 75px">
+    <colgroup>
+      <col style="min-width: 25px">
+      <col style="min-width: 25px">
+      <col style="min-width: 25px">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Type gravminne</th>
+        <th>Typisk pris (NOK)</th>
+        <th>Kommentar</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Standard granittplate</td>
+        <td>12 000–30 000</td>
+        <td>Vanlig for enkel innskrift</td>
+      </tr>
+      <tr>
+        <td>Tilpasset granitt med gravering</td>
+        <td>25 000–60 000</td>
+        <td>Kompleks skrift eller symboler</td>
+      </tr>
+      <tr>
+        <td>Bronseelementer eller relieff</td>
+        <td>40 000–120 000</td>
+        <td>Inkluderer støping og etterbehandling</td>
+      </tr>
+      <tr>
+        <td>Montering og transport</td>
+        <td>3 000–12 000</td>
+        <td>Avhenger av avstand og grunnarbeid</td>
+      </tr>
+    </tbody>
+  </table><!-- wp:paragraph -->
+  <p>Se priser fra lokale leverandører som Bergen Gravminner eller Sotra Stenhuggeri for nøyaktige tilbud. Husk å
+    inkludere kommunale gebyrer og eventuelle godkjenningskostnader.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Hvor lang leveringstid må jeg regne med?</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Standard leveransetid er 8–12 uker. Tilpassede arbeider tar 12–20 uker. Godkjenning fra kirkegårdsforvaltningen kan
+    ta 2–6 uker. Bestill tidlig hvis du har spesifikke datoer.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Kan jeg designe mitt eget gravminne?</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Ja, du kan designe det meste innenfor lokale regler. Mange stenhuggere som Sotra Stenhuggeri tilbyr 3D-forslag og
+    tegningsfiler. Send mål og ønsket skrift til leverandør, og få skriftprøver før produksjon.</p>
+  <!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Kontakt kirkegårdsforvaltningen først for godkjenning av form og størrelse.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Velg leverandør som viser materialprøver og referanser.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Hvilket materiale varer lengst i Bjørnafjorden?</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Granitt varer lengst i kystklima. Granitt tåler frost, salt og mekanisk slitasje bedre enn marmor eller skifer.
+    Bronse fungerer godt til detaljer men krever vedlikehold for å unngå patina. Oppgi klimaet ved forespørsel så
+    leverandøren beregner riktig finish.</p><!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>Kilder: Gravferdsloven, fagrapporter fra Norsk Institutt for Kulturminneforskning.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Er det regler jeg må forholde meg til i Bjørnafjorden?</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Ja, du må følge gravferdsloven og lokale vedtekter i Bjørnafjorden kommune. Du må søke kirkegårdsforvaltningen om
+    godkjenning før montering. Krav inkluderer maksimumsmål, fundamentdetaljer og materialgodkjenning.</p>
+  <!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Dokumentasjon: måltegning og materialeprøver.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Prosess: søknad, kommunal godkjenning, leverandørmontering.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Referanser: Gravferdsloven § 23 og Bjørnafjorden kommunes vedtekter.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Finnes det miljøvennlige alternativer?</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Ja, flere alternativer reduserer CO2 og kjemikaliebruk. Velg lokal granitt for kortere transport. Velg
+    overflatebehandling uten giftige stoffer. Velg leverandører som tilbyr resirkulert bronse eller leverandører med
+    miljøsertifisering.</p><!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>Eksempler</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Lokal granitt fra Vestlandet for kort transport.</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Ubehandlet skifer for lavere kjemikaliebruk.</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Hva bør stå i inskripsjonen?</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Velg enkel tekst for lesbarhet over tid. Inkluder navn, fødsels- og dødsdato og et kort minneord om ønskelig. Velg
+    skrifttype med tydelige bokstaver som holder seg ved slitasje.</p><!-- /wp:paragraph -->
+  <!-- wp:paragraph -->
+  <p>Forslag</p><!-- /wp:paragraph -->
+  <!-- wp:list {"ordered":false} -->
+  <ul>
+    <!-- wp:list-item -->
+    <li>Fullt navn, DD.MM.YYYY–DD.MM.YYYY</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Ett kort minneord eller symbol</li><!-- /wp:list-item -->
+    <!-- wp:list-item -->
+    <li>Kontaktinformasjon eller henvisning til minneside ved ønske</li><!-- /wp:list-item -->
+  </ul> <!-- /wp:list -->
+  <!-- wp:paragraph -->
+  <p>Be leverandøren vise prøvetekst i riktig størrelse slik at du ser lesbarheten på distanse.</p>
+  <!-- /wp:paragraph -->
+  <!-- wp:heading {"level":2} -->
+  <h2>Frequently Asked Questions</h2> <!-- /wp:heading -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Hva er forskjellen mellom gravminne og gravstein?</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Gravminne er en generell betegnelse for alle markører på en grav, inkludert plater, monumenter og dekorasjoner.
+    Gravstein er en spesifikk type gravminne laget av stein, ofte en oppreist eller liggende plate med inskripsjon.</p>
+  <!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Hvilke materialer anbefales for Bjørnafjorden-klimaet?</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Granitt anbefales for best holdbarhet, skifer for et dempet uttrykk, bronse for detaljer og rustfritt stål for
+    moderne preg. Velg materialer med lavt vedlikeholdsbehov og god frost- og saltmotstand.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Hvilke lokale regler gjelder i Bjørnafjorden?</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Kirkegårdsforvaltningen i Bjørnafjorden krever godkjenning av størrelse, høyde, form og materialvalg. Følg
+    gravferdsloven og kommunale vedtekter; søk om tillatelse før montering.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Hvor lang er leveringstiden for gravminner?</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Standard gravminner: ca. 8–12 uker. Skreddersydde design: 12–20 uker. I tillegg tar godkjenningsprosessen ofte 2–6
+    uker. Bestill i god tid.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Hva påvirker prisen mest?</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Materialvalg, størrelse, designkompleksitet, gravering og arbeidskostnader (transport, montering). Skreddersøm og
+    ekstradetaljer øker prisen mest.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Hvordan velge leverandør i Bjørnafjorden?</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Sammenlign lokale stenhuggere, be om referanser, prøver og skriftlig produksjonsplan. Velg leverandører som kjenner
+    kommunale regler og tilbyr montering og etterservice.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Hva bør jeg skrive i inskripsjonen?</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Kort, lesbar tekst med navn, fødsels- og dødsår, og eventuelt en kort minnetekst eller symbol. Unngå for mange
+    detaljer for bedre lesbarhet over tid.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Hvordan søke godkjenning hos kirkegårdsforvaltningen?</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Send måltegning, materialbeskrivelse og bilde av design til kirkegårdsforvaltningen. Følg lokale søknadsskjemaer og
+    vent på skriftlig godkjenning før produksjon.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Hvordan vedlikeholde forskjellige materialer?</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Granitt: mild såpe og vann; skifer: skånsom vask; bronse: polering eller patinabehandling; rustfritt stål:
+    avfetting og polering. Profesjonell rengjøring anbefales ved behov.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Hvor ofte bør gravminnet inspiseres?</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Kontroller visuelt hver sjette måned og få faglig inspeksjon hvert 2.–3. år, eller ved synlige skader. Dokumenter
+    tilstand med bilder.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Er det miljøvennlige alternativer?</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Ja—lokal stein reduserer transportutslipp, og materialvalg som ubehandlet granitt har lavt miljøavtrykk. Velg
+    leverandører som tilbyr bærekraftig praksis.</p><!-- /wp:paragraph -->
+  <!-- wp:heading {"level":3} -->
+  <h3>Hva gjør jeg hvis gravminnet trenger reparasjon?</h3> <!-- /wp:heading -->
+  <!-- wp:paragraph -->
+  <p>Kontakt kirkegårdsforvaltningen før større inngrep. Bruk erfarne stenhoggere for restaurering, få skriftlig avtale
+    om arbeid, pris og ansvar for trygg og korrekt utførelse.</p><!-- /wp:paragraph -->
+</body>
+
+</html>
