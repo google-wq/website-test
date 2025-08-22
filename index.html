@@ -1547,6 +1547,188 @@
 })(jQuery);
 </script>
 
+<script>
+(function ($) {
+  // Genererer Article schema automatisk fra sideinnhold
+  $(function () {
+    try {
+      // Fjern tidligere generert schema for å unngå duplikater
+      $("#article-schema").remove();
+
+      // Hjelpere
+      function getPlainText($el) {
+        if (!$el || !$el.length) return "";
+        var $clone = $el.clone();
+        $clone.find("script, style, noscript").remove();
+        return $clone.text().replace(/\s+/g, " ").trim();
+      }
+
+      function toISODate(dateLike) {
+        try {
+          var d = new Date(dateLike);
+          if (isNaN(d.getTime())) return "";
+          return d.toISOString().slice(0, 10); // yyyy-mm-dd
+        } catch (e) {
+          return "";
+        }
+      }
+
+      function firstNonEmpty(arr) {
+        for (var i = 0; i < arr.length; i++) {
+          if (arr[i] && String(arr[i]).trim().length) return String(arr[i]).trim();
+        }
+        return "";
+      }
+
+      function canonicalUrl() {
+        var href = $('link[rel="canonical"]').attr("href");
+        if (!href) href = window.location.href;
+        try {
+          // Fjern fragment
+          href = href.split("#")[0];
+        } catch(e) {}
+        return href;
+      }
+
+      // Finn et fornuftig artikkelrot
+      var $article = $("article, main .article, main .post, main .entry, main .content, main, .article, .post, .entry, .content").first();
+      if (!$article.length) $article = $("main, article").first();
+      if (!$article.length) $article = $(document.body);
+
+      // Felt: headline
+      var headline = firstNonEmpty([
+        $('meta[property="og:title"]').attr("content"),
+        $('meta[name="twitter:title"]').attr("content"),
+        getPlainText($("h1").first()),
+        document.title
+      ]);
+
+      // Felt: published og modified
+      var publishedRaw = firstNonEmpty([
+        $('meta[property="article:published_time"]').attr("content"),
+        $('meta[name="date"]').attr("content"),
+        $('meta[itemprop="datePublished"]').attr("content"),
+        $article.find('time[pubdate]').attr("datetime"),
+        $article.find('time[itemprop="datePublished"]').attr("datetime"),
+        $article.find('time[datetime]').first().attr("datetime")
+      ]);
+      var modifiedRaw = firstNonEmpty([
+        $('meta[property="article:modified_time"]').attr("content"),
+        $('meta[itemprop="dateModified"]').attr("content"),
+        $article.find('time[itemprop="dateModified"]').attr("datetime"),
+        document.lastModified
+      ]);
+
+      var datePublished = toISODate(publishedRaw) || toISODate(modifiedRaw) || toISODate(new Date());
+      var dateModified  = toISODate(modifiedRaw)  || datePublished;
+
+      // Felt: Backstory og about fra meta description eller første avsnitt
+      var metaDesc = $('meta[name="description"]').attr("content") || "";
+      var firstParagraph = getPlainText($article.find("p").first());
+      var backstory = firstNonEmpty([metaDesc, firstParagraph]);
+      var about = firstNonEmpty([firstParagraph, metaDesc]);
+
+      // Felt: articleSection fra h2 og h3
+      var sectionMap = Object.create(null);
+      var articleSection = [];
+      $article.find("h2, h3").each(function () {
+        var t = getPlainText($(this));
+        if (!t || t.length < 2) return;
+        var key = t.toLowerCase();
+        if (sectionMap[key]) return;
+        sectionMap[key] = 1;
+        articleSection.push(t);
+      });
+      articleSection = articleSection.slice(0, 30);
+
+      // Felt: keywords
+      function splitKeywords(s) {
+        return String(s || "")
+          .split(/,|\|/g)
+          .map(function (x) { return x.trim(); })
+          .filter(function (x) { return x.length > 0; });
+      }
+      var metaKw = splitKeywords($('meta[name="keywords"]').attr("content"));
+      var tagKw = [];
+      $('a[rel="tag"], .tag a, .tags a, .post-tags a').each(function () {
+        var t = getPlainText($(this));
+        if (t) tagKw.push(t);
+      });
+      var keywords = (metaKw.concat(tagKw)).filter(function (v, i, a) { return a.indexOf(v) === i; }).slice(0, 30);
+
+      // Felt: audienceType via data-attributt eller fallback
+      var audienceFromMeta = splitKeywords($('meta[name="audience"]').attr("content"));
+      var audienceType = audienceFromMeta.length ? audienceFromMeta : [
+        "Daglige ledere", "leder markedsføring", "CEO", "bedriftseiere", "kunder"
+      ];
+
+      // Felt: wordcount fra artikkeltekst
+      function countWords(text) {
+        if (!text) return 0;
+        var m = String(text).trim().match(/\b[\p{L}\p{N}']+\b/gu);
+        return m ? m.length : 0;
+      }
+      var articleText = getPlainText($article);
+      var wordcount = String(countWords(articleText));
+
+      // Felt: accessmode og accessibilityFeature
+      var accessmode = ["auditory", "textual", "visual", "textOnVisual"];
+      var accessibilityFeature = ["audioDescription", "captions"];
+
+      // Bygg JSON-LD ihht ønsket struktur
+      var data = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "datePublished": datePublished,
+        "dateModified": dateModified,
+        "@id": canonicalUrl(),
+        "headline": headline,
+        "Backstory": backstory,
+        "articleSection": articleSection,
+        "keywords": keywords,
+        "audience": {
+          "@type": "Audience",
+          "audienceType": audienceType
+        },
+        "wordcount": wordcount,
+        "about": about,
+        "accessmode": accessmode,
+        "accessibilityFeature": accessibilityFeature
+      };
+
+      // Rensk bort tomme felter for å holde schemaet ryddig
+      function pruneEmpty(obj) {
+        Object.keys(obj).forEach(function (k) {
+          var v = obj[k];
+          var isEmptyArr = Array.isArray(v) && v.length === 0;
+          var isEmptyStr = (typeof v === "string") && v.trim().length === 0;
+          var isObj = v && typeof v === "object" && !Array.isArray(v);
+          if (isObj) pruneEmpty(v);
+          if (isEmptyArr || isEmptyStr) delete obj[k];
+          if (isObj && Object.keys(v || {}).length === 0) delete obj[k];
+        });
+      }
+      pruneEmpty(data);
+
+      // Injiser i head
+      var script = document.createElement("script");
+      script.type = "application/ld+json";
+      script.id = "article-schema";
+      script.text = JSON.stringify(data);
+      (document.head || document.body).appendChild(script);
+
+      if (window.console && console.info) {
+        console.info("Article schema generert:", data);
+      }
+    } catch (e) {
+      if (window.console && console.error) {
+        console.error("Klarte ikke a generere Article schema:", e);
+      }
+    }
+  });
+})(jQuery);
+</script>
+
 </body>
 
 </html>
