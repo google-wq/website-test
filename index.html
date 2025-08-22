@@ -1418,6 +1418,135 @@
 })(jQuery);
 </script>
 
+<script>
+(function ($) {
+  // Genererer SiteNavigationElement schema fra innholdsfortegnelse og overskrifter
+  $(function () {
+    try {
+      // Fjern tidligere generert schema for å unngå duplikater
+      $("#sitenav-schema").remove();
+
+      // Hjelpefunksjon: ren tekst uten script og ekstra mellomrom
+      function getPlainText($el) {
+        if (!$el || !$el.length) return "";
+        var $clone = $el.clone();
+        $clone.find("script, style, noscript").remove();
+        return $clone.text().replace(/\s+/g, " ").trim();
+      }
+
+      // Hjelpefunksjon: legg til element i lister, unngå duplikat via URL
+      var urlMap = Object.create(null);
+      var names = [];
+      var urls = [];
+      function addItem(name, url) {
+        if (!name || !url) return;
+        var n = String(name).trim();
+        var u = String(url).trim();
+        // Kun interne ankerlenker
+        if (u.indexOf("#") !== 0) return;
+        var key = u.toLowerCase();
+        if (urlMap[key]) return;
+        urlMap[key] = true;
+        names.push(n);
+        urls.push(u);
+      }
+
+      // 1. Eksplisitte data-attributter
+      // Tillater data-nav-item med data-nav-name og data-nav-url
+      $("[data-nav-item]").each(function () {
+        var $it = $(this);
+        var name = $it.attr("data-nav-name") || getPlainText($it);
+        var url = $it.attr("data-nav-url") || ($it.is("a") ? $it.attr("href") : $it.find("a[href^='#']").first().attr("href"));
+        addItem(name, url);
+      });
+
+      // 2. Innholdsfortegnelse
+      // Finn seksjoner som sannsynligvis er ToC
+      var $tocSections = $("*").filter(function () {
+        var id = (this.id || "").toLowerCase();
+        var cls = (this.className || "").toString().toLowerCase();
+        var label = ($(this).attr("aria-label") || "").toLowerCase();
+        // Matcher vanlige begrep for innholdsfortegnelse
+        return /(toc|table-of-contents|innhold|innholdsfortegnelse|contents)/.test(id)
+            || /(toc|table-of-contents|innhold|innholdsfortegnelse|contents)/.test(cls)
+            || /(toc|table-of-contents|innhold|innholdsfortegnelse|contents)/.test(label)
+            || $(this).is("nav[role='doc-toc'], nav.toc, nav#toc");
+      });
+
+      $tocSections.each(function () {
+        var $sec = $(this);
+        $sec.find("a[href^='#']").each(function () {
+          var $a = $(this);
+          var name = getPlainText($a);
+          var url = $a.attr("href");
+          addItem(name, url);
+        });
+      });
+
+      // 3. Fallback: overskrifter i hovedinnhold som har id
+      if (names.length === 0) {
+        // Forsøk å avgrense til artikkelområde
+        var $article = $("article, main, #main, .article, .post, .content, .entry").first();
+        if (!$article.length) $article = $(document.body);
+
+        $article.find("h2[id], h3[id]").each(function () {
+          var $h = $(this);
+          var name = getPlainText($h);
+          var url = "#" + String($h.attr("id")).trim();
+          addItem(name, url);
+        });
+
+        // Alternativ: lenker som peker til overskrifter
+        if (names.length === 0) {
+          $article.find("a[href^='#']").each(function () {
+            var $a = $(this);
+            var href = $a.attr("href");
+            // Krev at referansen peker til et eksisterende element
+            if (href && $(href).length) {
+              addItem(getPlainText($a), href);
+            }
+          });
+        }
+      }
+
+      // 4. Beskrivelse fra meta description eller første avsnitt
+      var description =
+        $('meta[name="description"]').attr("content") ||
+        getPlainText(($("article p, .content p, main p").first())) ||
+        "Navigasjonselementer for denne siden";
+
+      // Ingen elementer funnet, ikke injiser schema
+      if (!names.length || !urls.length) return;
+
+      // 5. Bygg JSON-LD
+      var data = {
+        "@context": "https://schema.org",
+        "@type": "SiteNavigationElement",
+        "Name": names,
+        "Url": urls,
+        "description": description,
+        "accessMode": "auditory, tactile, textual, visual, textOnVisual"
+      };
+
+      // 6. Injiser i head
+      var script = document.createElement("script");
+      script.type = "application/ld+json";
+      script.id = "sitenav-schema";
+      script.text = JSON.stringify(data);
+      (document.head || document.body).appendChild(script);
+
+      if (window.console && console.info) {
+        console.info("SiteNavigationElement schema generert:", names.length, "lenker");
+      }
+    } catch (e) {
+      if (window.console && console.error) {
+        console.error("Klarte ikke a generere SiteNavigationElement schema:", e);
+      }
+    }
+  });
+})(jQuery);
+</script>
+
 </body>
 
 </html>
