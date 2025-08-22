@@ -4,113 +4,170 @@
   <title>Gravminne Bjørnafjorden: Veiledning for valg, regelverk og priser</title>
   
 <!-- jQuery i HEAD -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-eKhayi8LEQwp4NKxT7G0Yw+tO2pFymXQf+7iBqXUq7w=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-eKhayi8LEQwp4NKxT7G0Yw+tO2pFymXQf+7iBqXUq7w="
+        crossorigin="anonymous"></script>
 
-<!-- FAQ JSON-LD autogenerator (i HEAD) -->
+<!-- FAQ JSON-LD autogenerator -->
 <script>
-jQuery(function ($) {
-  var $root = $('#content').length ? $('#content') : $(document.body);
+(function ($) {
+  $(function () {
+    var DEBUG = false; // sett true for konsoll-logging
 
-  // Matcher norsk/engelsk FAQ-overskrift i h2–h4
-  var faqHeadingPattern = /(ofte\s*stilte\s*sp(?:ø|o)rsm(?:å|a)l|\bfaq\b|frequently\s+asked\s+questions)/i;
+    // Hvor vi leter: #content hvis finnes, ellers hele body
+    var $root = $('#content').length ? $('#content') : $(document.body);
 
-  // Finn alle overskrifter som markerer FAQ-seksjoner
-  var $faqSections = $root.find('h2, h3, h4').filter(function () {
-    return faqHeadingPattern.test($(this).text().trim());
-  });
-  if (!$faqSections.length) return;
+    // Mønster for å finne FAQ-overskrift (NO/EN-varianter)
+    var faqRe = /(ofte\s*stilte\s*sp(?:ø|o)rsm(?:å|a)l|\bfaq\b|frequently\s+asked\s+questions|spørsmål\s*og\s*svar|vanlige\s*spørsmål)/i;
 
-  // Ikke dupliser hvis FAQ-LD allerede finnes
-  var hasExistingFAQ = $('head script[type="application/ld+json"]').filter(function(){
-    return /"@type"\s*:\s*"FAQPage"/i.test($(this).text());
-  }).length > 0;
-  if (hasExistingFAQ) return;
+    // Ikke dupliser hvis FAQ-LD ligger i head fra før
+    if ($('head script[type="application/ld+json"]').filter(function () {
+      return /"@type"\s*:\s*"FAQPage"/i.test($(this).text());
+    }).length) { if (DEBUG) console.info('[FAQ-LD] eksisterer – hopper over'); return; }
 
-  function isHeading(el){ return /^H[2-4]$/.test(el.tagName); }
-  function levelOf(el){ return parseInt(el.tagName.substring(1), 10); }
+    function isHeading(el) { return /^H[2-6]$/.test(el.tagName); }
+    function levelOf(el) { return parseInt(el.tagName.substring(1), 10); }
 
-  function tidyHTML(html){
-    return (html || '')
-      .replace(/\s+\n/g, ' ')
-      .replace(/\n+/g, ' ')
-      .replace(/\s{2,}/g, ' ')
-      .replace(/<\/script/gi, '<\\/script');
-  }
+    // Unngå rå </script> i selve *koden* og i JSON-LD
+    var END_SCRIPT = '<' + '/' + 'script';
+    var END_SCRIPT_RE = new RegExp(END_SCRIPT, 'gi');
 
-  // Finn slutten av en FAQ-seksjon (neste heading med nivå <= seksjonsnivå)
-  function findSectionEnd($sectionHead){
-    var sectionLevel = levelOf($sectionHead[0]);
-    var $el = $sectionHead.next();
-    while ($el.length) {
-      if (isHeading($el[0]) && levelOf($el[0]) <= sectionLevel) return $el;
-      $el = $el.next();
+    function tidyHTML(html) {
+      return (html || '')
+        .replace(/\s+\n/g, ' ')
+        .replace(/\n+/g, ' ')
+        .replace(/\s{2,}/g, ' ')
+        .replace(END_SCRIPT_RE, '<' + '\\/' + 'script'); // gjør sikker i JSON
     }
-    return $(); // tom -> slutt av dokument
-  }
 
-  // Samle svarnoder etter et spørsmål frem til neste heading med nivå <= spørsmålsnivå, eller seksjonsslutt
-  function collectAnswerNodes($qHead, stopLevel, $sectionEnd){
-    var nodes = [], $el = $qHead.next();
-    while ($el.length && !$el.is($sectionEnd)) {
-      if (isHeading($el[0])) {
-        var lvl = levelOf($el[0]);
-        if (lvl <= stopLevel) break;
+    // Finn slutten av en seksjon (neste heading med nivå <= startnivå)
+    function sectionEnd(startHeading) {
+      var startLvl = levelOf(startHeading), el = startHeading.nextElementSibling;
+      while (el) { if (isHeading(el) && levelOf(el) <= startLvl) return el; el = el.nextElementSibling; }
+      return null;
+    }
+
+    // Samle svarnoder etter et spørsmål frem til neste heading med nivå <= spørsmålnivå, eller seksjonsslutt
+    function collectAnswerNodes(qHeading, stopLevel, endEl) {
+      var nodes = [], el = qHeading.nextElementSibling;
+      while (el && el !== endEl) {
+        if (isHeading(el) && levelOf(el) <= stopLevel) break;
+        nodes.push(el); el = el.nextElementSibling;
       }
-      nodes.push($el[0]);
-      $el = $el.next();
+      return nodes;
     }
-    return nodes;
-  }
 
-  var allQA = [];
+    var qa = [];
 
-  $faqSections.each(function () {
-    var $sectionHead = $(this);
-    var $sectionEnd = findSectionEnd($sectionHead);
-
-    // Alle headings inni seksjonen
-    var $within = $sectionHead.nextUntil($sectionEnd.length ? $sectionEnd : null);
-
-    // Spørsmål = h3/h4 primært
-    var $qHeads = $within.filter('h3, h4');
-    // Fallback: hvis ingen h3/h4 i seksjonen, bruk h2 der inne
-    if (!$qHeads.length) $qHeads = $within.filter('h2');
-
-    $qHeads.each(function () {
-      var $q = $(this);
-      var qText = $q.text().trim();
-      if (!qText) return;
-
-      var ansNodes = collectAnswerNodes($q, levelOf(this), $sectionEnd);
-      if (!ansNodes.length) return;
-
-      // Behold enkel HTML i svaret (ok i JSON-LD). Unngå script å bryte blokken.
-      var answerHTML = tidyHTML(ansNodes.map(function(n){ return n.outerHTML || $(n).text(); }).join(''));
-      if (!answerHTML) return;
-
-      allQA.push({
-        "@type": "Question",
-        "name": qText,
-        "acceptedAnswer": { "@type": "Answer", "text": answerHTML }
+    // A) FAQ-seksjon basert på overskrift (h2–h4)
+    (function scanBySectionHeading() {
+      var $faqHeads = $root.find('h2,h3,h4').filter(function () {
+        return faqRe.test($(this).text().trim());
       });
-    });
+      if (!$faqHeads.length) return;
+
+      $faqHeads.each(function () {
+        var head = this;
+        var endEl = sectionEnd(head);
+
+        // Hent underoverskrifter i seksjonen
+        var sectionNodes = [];
+        var el = head.nextElementSibling;
+        while (el && el !== endEl) { sectionNodes.push(el); el = el.nextElementSibling; }
+
+        var subHeads = sectionNodes.filter(isHeading);
+
+        // Spørsmål = h3/h4 primært; fallback h2 hvis null funn
+        var qHeads = subHeads.filter(function (e) { var l = levelOf(e); return l === 3 || l === 4; });
+        if (!qHeads.length) qHeads = subHeads.filter(function (e) { return levelOf(e) === 2; });
+
+        qHeads.forEach(function (qh) {
+          var qText = (qh.textContent || '').trim();
+          if (!qText) return;
+          var ansNodes = collectAnswerNodes(qh, levelOf(qh), endEl);
+          if (!ansNodes.length) return;
+          var answerHTML = tidyHTML(ansNodes.map(function (n) { return n.outerHTML || (n.textContent || ''); }).join(''));
+          if (!answerHTML) return;
+
+          qa.push({ "@type": "Question", "name": qText, "acceptedAnswer": { "@type": "Answer", "text": answerHTML } });
+        });
+      });
+    })();
+
+    // B) <details><summary>Q</summary>Answer…</details>
+    (function scanDetails() {
+      $root.find('details').each(function () {
+        var $sum = $(this).children('summary').first();
+        if (!$sum.length) return;
+        var qText = $sum.text().trim();
+        if (!qText) return;
+        var parts = [];
+        $(this).contents().each(function () {
+          if (this.nodeType === 1 && this.tagName !== 'SUMMARY') parts.push(this.outerHTML);
+          else if (this.nodeType === 3) parts.push(this.nodeValue);
+        });
+        var answerHTML = tidyHTML(parts.join(''));
+        if (answerHTML) qa.push({ "@type": "Question", "name": qText, "acceptedAnswer": { "@type": "Answer", "text": answerHTML } });
+      });
+    })();
+
+    // C) <dl><dt>Q</dt><dd>A</dd></dl>
+    (function scanDefinitionLists() {
+      $root.find('dl').each(function () {
+        var $dt = $(this).children('dt');
+        var $dd = $(this).children('dd');
+        if (!$dt.length || !$dd.length) return;
+        for (var i = 0; i < Math.min($dt.length, $dd.length); i++) {
+          var qText = $dt.eq(i).text().trim();
+          var answerHTML = tidyHTML($dd.eq(i).html() || '');
+          if (qText && answerHTML) qa.push({ "@type": "Question", "name": qText, "acceptedAnswer": { "@type": "Answer", "text": answerHTML } });
+        }
+      });
+    })();
+
+    // D) “Løse” spørsmål: h3/h4 som slutter med “?”
+    (function scanLooseHeadings() {
+      var $candidates = $root.find('h3,h4').filter(function () {
+        return /\?\s*$/.test($(this).text().trim());
+      });
+      $candidates.each(function () {
+        var qh = this;
+        var qText = (qh.textContent || '').trim();
+        var endEl = null; // stopp ved neste h3/h4/h2
+        // Finn neste heading med nivå <= nåværende nivå
+        var el = qh.nextElementSibling;
+        while (el) { if (isHeading(el) && levelOf(el) <= levelOf(qh)) { endEl = el; break; } el = el.nextElementSibling; }
+        var ansNodes = collectAnswerNodes(qh, levelOf(qh), endEl);
+        if (!ansNodes.length) return;
+        var answerHTML = tidyHTML(ansNodes.map(function (n) { return n.outerHTML || (n.textContent || ''); }).join(''));
+        if (qText && answerHTML) qa.push({ "@type": "Question", "name": qText, "acceptedAnswer": { "@type": "Answer", "text": answerHTML } });
+      });
+    })();
+
+    // Dedupér på spørsmåls-tekst
+    if (qa.length) {
+      var seen = Object.create(null);
+      qa = qa.filter(function (item) {
+        var key = item.name.toLowerCase();
+        if (seen[key]) return false;
+        seen[key] = 1; return true;
+      });
+    }
+
+    if (!qa.length) { if (DEBUG) console.info('[FAQ-LD] Fant ingen Q/A'); return; }
+
+    var data = { "@context": "https://schema.org", "@type": "FAQPage", "mainEntity": qa };
+
+    // Skriv KUN til HEAD uten rå </script> i kilde
+    var el = document.createElement('script');
+    el.type = 'application/ld+json';
+    el.setAttribute('data-generated', 'faq');
+    el.appendChild(document.createTextNode(JSON.stringify(data)));
+    document.head.appendChild(el);
+
+    if (DEBUG) console.log('[FAQ-LD] injisert', qa.length, 'Q/A');
   });
-
-  if (!allQA.length) return;
-
-  var data = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": allQA
-  };
-
-  // Skriv kun til HEAD
-  var el = document.createElement('script');
-  el.type = 'application/ld+json';
-  el.setAttribute('data-generated', 'faq');
-  el.textContent = JSON.stringify(data, null, 2);
-  document.head.appendChild(el);
-});
+})(jQuery);
 </script>
 
 </head>
