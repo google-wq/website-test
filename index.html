@@ -2,155 +2,6 @@
 
 <head>
   <title>Gravminne Bjørnafjorden: Veiledning for valg, regelverk og priser</title>
-  
-<script>
-(function ($) {
-  // Genererer FAQ schema fra eksisterende innhold
-  $(function () {
-    try {
-      // Fjern tidligere generert schema for å unngå duplikater
-      $("#faq-schema").remove();
-
-      // Hjelpefunksjon: hent ren tekst uten scripts og unødvendige mellomrom
-      function getPlainText($el) {
-        if (!$el || !$el.length) return "";
-        var $clone = $el.clone();
-        $clone.find("script, style, noscript").remove();
-        return $clone.text().replace(/\s+/g, " ").trim();
-      }
-
-      // Hjelpefunksjon: legg til par, unngå duplikatspørsmål
-      var map = Object.create(null);
-      var pairs = [];
-      function addPair(q, a) {
-        if (!q || !a) return;
-        var qt = String(q).trim();
-        var at = String(a).trim();
-        if (qt.length < 3 || at.length < 3) return;
-        var key = qt.toLowerCase();
-        if (map[key]) return;
-        map[key] = true;
-        pairs.push({ q: qt, a: at });
-      }
-
-      // 1. Eksplisitte data-attributter
-      $("[data-faq-item]").each(function () {
-        var $it = $(this);
-        var q = getPlainText($it.find("[data-faq-question]").first());
-        var a = getPlainText($it.find("[data-faq-answer]").first());
-        addPair(q, a);
-      });
-
-      // 2. Details og summary
-      $("details").each(function () {
-        var $d = $(this);
-        var q = getPlainText($d.children("summary").first());
-        var $content = $d.clone();
-        $content.children("summary").remove();
-        var a = getPlainText($content);
-        addPair(q, a);
-      });
-
-      // 3. Vanlige FAQ-seksjoner og akkordeoner
-      // Finn seksjoner som sannsynligvis er FAQ
-      var $faqSections = $("*").filter(function () {
-        var id = (this.id || "").toLowerCase();
-        var cls = (this.className || "").toString().toLowerCase();
-        var label = ($(this).attr("aria-label") || "").toLowerCase();
-        return /faq/.test(id) || /faq/.test(cls) || /faq/.test(label);
-      });
-
-      $faqSections.each(function () {
-        var $sec = $(this);
-
-        // a) Elementer som ser ut som items
-        $sec.find(".faq-item, .accordion-item, .accordion, .card, .panel").each(function () {
-          var $it = $(this);
-          var q = getPlainText(
-            $it.find(".faq-q, .faq-question, .accordion-header, .card-header, .panel-heading, h2, h3, h4, h5").first()
-          );
-          var a = getPlainText(
-            $it.find(".faq-a, .faq-answer, .accordion-body, .card-body, .panel-body, .content, p, div").first()
-          );
-          addPair(q, a);
-        });
-
-        // b) Overskrift som ser ut som spørsmål etterfulgt av svarblokk
-        $sec.find("h2, h3, h4, h5").each(function () {
-          var $h = $(this);
-          var q = getPlainText($h);
-          if (!/\?$/.test(q)) return;
-          var $ans = $h.nextUntil("h2, h3, h4, h5");
-          if (!$ans.length) $ans = $h.next();
-          var a = getPlainText($ans);
-          addPair(q, a);
-        });
-      });
-
-      // 4. Siste utvei: hele dokumentet, overskrifter som ender med spørsmålstegn
-      if (pairs.length === 0) {
-        $("h2, h3, h4, h5").each(function () {
-          var $h = $(this);
-          var q = getPlainText($h);
-          if (!/\?$/.test(q)) return;
-          var $ans = $h.nextUntil("h2, h3, h4, h5");
-          if (!$ans.length) $ans = $h.next();
-          var a = getPlainText($ans);
-          addPair(q, a);
-        });
-      }
-
-      // Rensk opp svartekst, fjern svært korte svar og begrens antall
-      pairs = pairs
-        .map(function (p) {
-          return {
-            q: p.q.replace(/\s+/g, " ").trim(),
-            a: p.a.replace(/\s+/g, " ").trim()
-          };
-        })
-        .filter(function (p) {
-          return p.q.length >= 3 && p.a.length >= 3;
-        })
-        .slice(0, 30);
-
-      if (!pairs.length) return;
-
-      // Bygg JSON-LD via objekter for sikker escaping
-      var faqData = {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": pairs.map(function (p) {
-          return {
-            "@type": "Question",
-            "name": p.q,
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": p.a
-            }
-          };
-        })
-      };
-
-      // Lag script-element og injiser i dokumenthodet
-      var script = document.createElement("script");
-      script.type = "application/ld+json";
-      script.id = "faq-schema";
-      script.text = JSON.stringify(faqData);
-      (document.head || document.body).appendChild(script);
-
-      // Valgfritt: logg hvor mange elementer som ble generert
-      if (window.console && console.info) {
-        console.info("FAQ schema generert:", pairs.length, "sporsmal");
-      }
-    } catch (e) {
-      if (window.console && console.error) {
-        console.error("Klarte ikke a generere FAQ schema:", e);
-      }
-    }
-  });
-})(jQuery);
-</script>
-
 
 </head>
 
@@ -1418,6 +1269,155 @@
   <!-- wp:paragraph -->
   <p>Kontakt kirkegårdsforvaltningen før større inngrep. Bruk erfarne stenhoggere for restaurering, få skriftlig avtale
     om arbeid, pris og ansvar for trygg og korrekt utførelse.</p><!-- /wp:paragraph -->
+
+<script>
+(function ($) {
+  // Genererer FAQ schema fra eksisterende innhold
+  $(function () {
+    try {
+      // Fjern tidligere generert schema for å unngå duplikater
+      $("#faq-schema").remove();
+
+      // Hjelpefunksjon: hent ren tekst uten scripts og unødvendige mellomrom
+      function getPlainText($el) {
+        if (!$el || !$el.length) return "";
+        var $clone = $el.clone();
+        $clone.find("script, style, noscript").remove();
+        return $clone.text().replace(/\s+/g, " ").trim();
+      }
+
+      // Hjelpefunksjon: legg til par, unngå duplikatspørsmål
+      var map = Object.create(null);
+      var pairs = [];
+      function addPair(q, a) {
+        if (!q || !a) return;
+        var qt = String(q).trim();
+        var at = String(a).trim();
+        if (qt.length < 3 || at.length < 3) return;
+        var key = qt.toLowerCase();
+        if (map[key]) return;
+        map[key] = true;
+        pairs.push({ q: qt, a: at });
+      }
+
+      // 1. Eksplisitte data-attributter
+      $("[data-faq-item]").each(function () {
+        var $it = $(this);
+        var q = getPlainText($it.find("[data-faq-question]").first());
+        var a = getPlainText($it.find("[data-faq-answer]").first());
+        addPair(q, a);
+      });
+
+      // 2. Details og summary
+      $("details").each(function () {
+        var $d = $(this);
+        var q = getPlainText($d.children("summary").first());
+        var $content = $d.clone();
+        $content.children("summary").remove();
+        var a = getPlainText($content);
+        addPair(q, a);
+      });
+
+      // 3. Vanlige FAQ-seksjoner og akkordeoner
+      // Finn seksjoner som sannsynligvis er FAQ
+      var $faqSections = $("*").filter(function () {
+        var id = (this.id || "").toLowerCase();
+        var cls = (this.className || "").toString().toLowerCase();
+        var label = ($(this).attr("aria-label") || "").toLowerCase();
+        return /faq/.test(id) || /faq/.test(cls) || /faq/.test(label);
+      });
+
+      $faqSections.each(function () {
+        var $sec = $(this);
+
+        // a) Elementer som ser ut som items
+        $sec.find(".faq-item, .accordion-item, .accordion, .card, .panel").each(function () {
+          var $it = $(this);
+          var q = getPlainText(
+            $it.find(".faq-q, .faq-question, .accordion-header, .card-header, .panel-heading, h2, h3, h4, h5").first()
+          );
+          var a = getPlainText(
+            $it.find(".faq-a, .faq-answer, .accordion-body, .card-body, .panel-body, .content, p, div").first()
+          );
+          addPair(q, a);
+        });
+
+        // b) Overskrift som ser ut som spørsmål etterfulgt av svarblokk
+        $sec.find("h2, h3, h4, h5").each(function () {
+          var $h = $(this);
+          var q = getPlainText($h);
+          if (!/\?$/.test(q)) return;
+          var $ans = $h.nextUntil("h2, h3, h4, h5");
+          if (!$ans.length) $ans = $h.next();
+          var a = getPlainText($ans);
+          addPair(q, a);
+        });
+      });
+
+      // 4. Siste utvei: hele dokumentet, overskrifter som ender med spørsmålstegn
+      if (pairs.length === 0) {
+        $("h2, h3, h4, h5").each(function () {
+          var $h = $(this);
+          var q = getPlainText($h);
+          if (!/\?$/.test(q)) return;
+          var $ans = $h.nextUntil("h2, h3, h4, h5");
+          if (!$ans.length) $ans = $h.next();
+          var a = getPlainText($ans);
+          addPair(q, a);
+        });
+      }
+
+      // Rensk opp svartekst, fjern svært korte svar og begrens antall
+      pairs = pairs
+        .map(function (p) {
+          return {
+            q: p.q.replace(/\s+/g, " ").trim(),
+            a: p.a.replace(/\s+/g, " ").trim()
+          };
+        })
+        .filter(function (p) {
+          return p.q.length >= 3 && p.a.length >= 3;
+        })
+        .slice(0, 30);
+
+      if (!pairs.length) return;
+
+      // Bygg JSON-LD via objekter for sikker escaping
+      var faqData = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": pairs.map(function (p) {
+          return {
+            "@type": "Question",
+            "name": p.q,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": p.a
+            }
+          };
+        })
+      };
+
+      // Lag script-element og injiser i dokumenthodet
+      var script = document.createElement("script");
+      script.type = "application/ld+json";
+      script.id = "faq-schema";
+      script.text = JSON.stringify(faqData);
+      (document.head || document.body).appendChild(script);
+
+      // Valgfritt: logg hvor mange elementer som ble generert
+      if (window.console && console.info) {
+        console.info("FAQ schema generert:", pairs.length, "sporsmal");
+      }
+    } catch (e) {
+      if (window.console && console.error) {
+        console.error("Klarte ikke a generere FAQ schema:", e);
+      }
+    }
+  });
+})(jQuery);
+</script>
+
 </body>
 
 </html>
