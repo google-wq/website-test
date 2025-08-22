@@ -84,7 +84,7 @@ jQuery(function ($) {
       var ansNodes = collectAnswerNodes($q, levelOf(this), $sectionEnd);
       if (!ansNodes.length) return;
 
-      // Behold enkel HTML i svaret (ok i JSON-LD). Unngå </script> å bryte blokken.
+      // Behold enkel HTML i svaret (ok i JSON-LD). Unngå script å bryte blokken.
       var answerHTML = tidyHTML(ansNodes.map(function(n){ return n.outerHTML || $(n).text(); }).join(''));
       if (!answerHTML) return;
 
