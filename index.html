@@ -1272,11 +1272,13 @@
 
 <script>
 (function ($) {
-  // Generer FAQ schema kun fra innhold under en FAQ-overskrift
+  // Genererer FAQ schema fra eksisterende innhold
   $(function () {
     try {
+      // Fjern tidligere generert schema for å unngå duplikater
       $("#faq-schema").remove();
 
+      // Hjelpefunksjon: hent ren tekst uten scripts og unødvendige mellomrom
       function getPlainText($el) {
         if (!$el || !$el.length) return "";
         var $clone = $el.clone();
@@ -1284,39 +1286,7 @@
         return $clone.text().replace(/\s+/g, " ").trim();
       }
 
-      function headerLevel(tag) {
-        var m = /^H([1-6])$/.exec(String(tag).toUpperCase());
-        return m ? parseInt(m[1], 10) : 6;
-      }
-
-      // Match på vanlige varianter av FAQ-overskrifter
-      var faqHeaderRe = /(faq|ofte stilte sp(ø|o)rsm(å|a)l|frequently asked questions|Frequently Asked Questions|FAQ)/i;
-
-      // Finn overskrifter som inneholder FAQ-tekst
-      var $anchors = $("h1, h2, h3, h4, h5, h6").filter(function () {
-        var t = getPlainText($(this));
-        return faqHeaderRe.test(t);
-      });
-
-      if (!$anchors.length) {
-        // Ingen FAQ-overskrift funnet, ikke injiser schema
-        return;
-      }
-
-      // Hent alle noder som tilhører seksjonen etter hver FAQ-overskrift
-      function sectionUnderHeader($h) {
-        var lvl = headerLevel($h.prop("tagName"));
-        var nodes = [];
-        var $n = $h.next();
-        while ($n.length) {
-          var tag = String($n.prop("tagName")).toUpperCase();
-          if (/^H[1-6]$/.test(tag) && headerLevel(tag) <= lvl) break;
-          nodes.push($n[0]);
-          $n = $n.next();
-        }
-        return $(nodes);
-      }
-
+      // Hjelpefunksjon: legg til par, unngå duplikatspørsmål
       var map = Object.create(null);
       var pairs = [];
       function addPair(q, a) {
@@ -1330,27 +1300,38 @@
         pairs.push({ q: qt, a: at });
       }
 
-      function extractPairsIn($root) {
-        // data-attributter
-        $root.find("[data-faq-item]").each(function () {
-          var $it = $(this);
-          var q = getPlainText($it.find("[data-faq-question]").first());
-          var a = getPlainText($it.find("[data-faq-answer]").first());
-          addPair(q, a);
-        });
+      // 1. Eksplisitte data-attributter
+      $("[data-faq-item]").each(function () {
+        var $it = $(this);
+        var q = getPlainText($it.find("[data-faq-question]").first());
+        var a = getPlainText($it.find("[data-faq-answer]").first());
+        addPair(q, a);
+      });
 
-        // details/summary
-        $root.find("details").each(function () {
-          var $d = $(this);
-          var q = getPlainText($d.children("summary").first());
-          var $content = $d.clone();
-          $content.children("summary").remove();
-          var a = getPlainText($content);
-          addPair(q, a);
-        });
+      // 2. Details og summary
+      $("details").each(function () {
+        var $d = $(this);
+        var q = getPlainText($d.children("summary").first());
+        var $content = $d.clone();
+        $content.children("summary").remove();
+        var a = getPlainText($content);
+        addPair(q, a);
+      });
 
-        // Vanlige akkordeon-strukturer
-        $root.find(".faq-item, .accordion-item, .accordion, .card, .panel").each(function () {
+      // 3. Vanlige FAQ-seksjoner og akkordeoner
+      // Finn seksjoner som sannsynligvis er FAQ
+      var $faqSections = $("*").filter(function () {
+        var id = (this.id || "").toLowerCase();
+        var cls = (this.className || "").toString().toLowerCase();
+        var label = ($(this).attr("aria-label") || "").toLowerCase();
+        return /faq/.test(id) || /faq/.test(cls) || /faq/.test(label);
+      });
+
+      $faqSections.each(function () {
+        var $sec = $(this);
+
+        // a) Elementer som ser ut som items
+        $sec.find(".faq-item, .accordion-item, .accordion, .card, .panel").each(function () {
           var $it = $(this);
           var q = getPlainText(
             $it.find(".faq-q, .faq-question, .accordion-header, .card-header, .panel-heading, h2, h3, h4, h5").first()
@@ -1358,39 +1339,50 @@
           var a = getPlainText(
             $it.find(".faq-a, .faq-answer, .accordion-body, .card-body, .panel-body, .content, p, div").first()
           );
-          if (q && a) addPair(q, a);
+          addPair(q, a);
         });
 
-        // Overskrift som ser ut som spørsmål etterfulgt av svarblokk
-        $root.find("h2, h3, h4, h5").each(function () {
+        // b) Overskrift som ser ut som spørsmål etterfulgt av svarblokk
+        $sec.find("h2, h3, h4, h5").each(function () {
           var $h = $(this);
           var q = getPlainText($h);
-          // Primært krev spørsmålstegn, men tillat også korte spørsmålsaktige overskrifter
-          var likelyQuestion = /\?$/.test(q) || q.split(" ").length <= 12;
-          if (!likelyQuestion) return;
+          if (!/\?$/.test(q)) return;
           var $ans = $h.nextUntil("h2, h3, h4, h5");
           if (!$ans.length) $ans = $h.next();
           var a = getPlainText($ans);
-          if (a) addPair(q, a);
+          addPair(q, a);
+        });
+      });
+
+      // 4. Siste utvei: hele dokumentet, overskrifter som ender med spørsmålstegn
+      if (pairs.length === 0) {
+        $("h2, h3, h4, h5").each(function () {
+          var $h = $(this);
+          var q = getPlainText($h);
+          if (!/\?$/.test(q)) return;
+          var $ans = $h.nextUntil("h2, h3, h4, h5");
+          if (!$ans.length) $ans = $h.next();
+          var a = getPlainText($ans);
+          addPair(q, a);
         });
       }
 
-      // Kjør utelukkende innenfor seksjoner under FAQ-overskrifter
-      $anchors.each(function () {
-        var $sec = sectionUnderHeader($(this));
-        extractPairsIn($sec);
-      });
-
-      // Rensk, begrens, og injiser JSON-LD
+      // Rensk opp svartekst, fjern svært korte svar og begrens antall
       pairs = pairs
         .map(function (p) {
-          return { q: p.q.replace(/\s+/g, " ").trim(), a: p.a.replace(/\s+/g, " ").trim() };
+          return {
+            q: p.q.replace(/\s+/g, " ").trim(),
+            a: p.a.replace(/\s+/g, " ").trim()
+          };
         })
-        .filter(function (p) { return p.q.length >= 3 && p.a.length >= 3; })
+        .filter(function (p) {
+          return p.q.length >= 3 && p.a.length >= 3;
+        })
         .slice(0, 30);
 
       if (!pairs.length) return;
 
+      // Bygg JSON-LD via objekter for sikker escaping
       var faqData = {
         "@context": "https://schema.org",
         "@type": "FAQPage",
@@ -1398,19 +1390,24 @@
           return {
             "@type": "Question",
             "name": p.q,
-            "acceptedAnswer": { "@type": "Answer", "text": p.a }
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": p.a
+            }
           };
         })
       };
 
+      // Lag script-element og injiser i dokumenthodet
       var script = document.createElement("script");
       script.type = "application/ld+json";
       script.id = "faq-schema";
       script.text = JSON.stringify(faqData);
       (document.head || document.body).appendChild(script);
 
+      // Valgfritt: logg hvor mange elementer som ble generert
       if (window.console && console.info) {
-        console.info("FAQ schema generert fra FAQ-overskrift(er):", $anchors.length, "seksjon(er). Elementer:", pairs.length);
+        console.info("FAQ schema generert:", pairs.length, "sporsmal");
       }
     } catch (e) {
       if (window.console && console.error) {
