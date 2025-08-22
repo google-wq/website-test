@@ -2,153 +2,117 @@
 
 <head>
   <title>Gravminne Bjørnafjorden: Veiledning for valg, regelverk og priser</title>
-  <script>
-(() => {
-  'use strict';
+  
+<!-- jQuery i HEAD -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-eKhayi8LEQwp4NKxT7G0Yw+tO2pFymXQf+7iBqXUq7w=" crossorigin="anonymous"></script>
 
-  const CONFIG = {
-    // Where to look for the article content
-    root: document.querySelector('#content') || document.body,
-    // Match FAQ section headings (Norwegian + English)
-    faqHeadingPattern: /(ofte\s*stilte\s*sp(?:ø|o)rsm(?:å|a)l|\bfaq\b|frequently\s+asked\s+questions)/i,
-    // Consider these heading levels as possible questions inside a FAQ section
-    questionLevels: new Set([3,4]), // h3, h4
-    // If true, also treat h2 immediately under the FAQ section as questions when no h3/h4 found
-    allowH2QuestionsFallback: true,
-    // Max characters per answer text (0 = unlimited). Set to avoid huge payloads.
-    maxAnswerChars: 0,
-  };
+<!-- FAQ JSON-LD autogenerator (i HEAD) -->
+<script>
+jQuery(function ($) {
+  var $root = $('#content').length ? $('#content') : $(document.body);
 
-  const onReady = (fn) => {
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, { once: true });
-    else fn();
-  };
+  // Matcher norsk/engelsk FAQ-overskrift i h2–h4
+  var faqHeadingPattern = /(ofte\s*stilte\s*sp(?:ø|o)rsm(?:å|a)l|\bfaq\b|frequently\s+asked\s+questions)/i;
 
-  const isHeading = (el) => /^H[2-4]$/.test(el.tagName);
-  const levelOf = (el) => parseInt(el.tagName.slice(1), 10);
+  // Finn alle overskrifter som markerer FAQ-seksjoner
+  var $faqSections = $root.find('h2, h3, h4').filter(function () {
+    return faqHeadingPattern.test($(this).text().trim());
+  });
+  if (!$faqSections.length) return;
 
-  // Normalize whitespace a bit, and make </script> safe inside JSON-LD
-  const tidyHTML = (html) => html
-    .replace(/\s+\n/g, ' ')
-    .replace(/\n+/g, ' ')
-    .replace(/\s{2,}/g, ' ')
-    .replace(/<\/script/gi, '<\\/script');
+  // Ikke dupliser hvis FAQ-LD allerede finnes
+  var hasExistingFAQ = $('head script[type="application/ld+json"]').filter(function(){
+    return /"@type"\s*:\s*"FAQPage"/i.test($(this).text());
+  }).length > 0;
+  if (hasExistingFAQ) return;
 
-  // Collect nodes after `fromEl` until we hit the next heading with level <= `stopLevel`,
-  // or we reach `sectionEnd`.
-  const collectAnswerNodes = (fromEl, stopLevel, sectionEnd) => {
-    const nodes = [];
-    let el = fromEl.nextElementSibling;
-    while (el && el !== sectionEnd) {
-      if (isHeading(el)) {
-        const lvl = levelOf(el);
+  function isHeading(el){ return /^H[2-4]$/.test(el.tagName); }
+  function levelOf(el){ return parseInt(el.tagName.substring(1), 10); }
+
+  function tidyHTML(html){
+    return (html || '')
+      .replace(/\s+\n/g, ' ')
+      .replace(/\n+/g, ' ')
+      .replace(/\s{2,}/g, ' ')
+      .replace(/<\/script/gi, '<\\/script');
+  }
+
+  // Finn slutten av en FAQ-seksjon (neste heading med nivå <= seksjonsnivå)
+  function findSectionEnd($sectionHead){
+    var sectionLevel = levelOf($sectionHead[0]);
+    var $el = $sectionHead.next();
+    while ($el.length) {
+      if (isHeading($el[0]) && levelOf($el[0]) <= sectionLevel) return $el;
+      $el = $el.next();
+    }
+    return $(); // tom -> slutt av dokument
+  }
+
+  // Samle svarnoder etter et spørsmål frem til neste heading med nivå <= spørsmålsnivå, eller seksjonsslutt
+  function collectAnswerNodes($qHead, stopLevel, $sectionEnd){
+    var nodes = [], $el = $qHead.next();
+    while ($el.length && !$el.is($sectionEnd)) {
+      if (isHeading($el[0])) {
+        var lvl = levelOf($el[0]);
         if (lvl <= stopLevel) break;
       }
-      nodes.push(el);
-      el = el.nextElementSibling;
+      nodes.push($el[0]);
+      $el = $el.next();
     }
     return nodes;
-  };
+  }
 
-  // Find the element that ends the current FAQ section (the next heading of same/higher rank)
-  const findSectionEnd = (sectionHeading) => {
-    const sectionLevel = levelOf(sectionHeading);
-    let el = sectionHeading.nextElementSibling;
-    while (el) {
-      if (isHeading(el) && levelOf(el) <= sectionLevel) return el;
-      el = el.nextElementSibling;
-    }
-    return null;
-  };
+  var allQA = [];
 
-  // Find FAQ section headings (h2/h3/h4 whose text matches faqHeadingPattern)
-  const findFaqSectionHeadings = (root) => {
-    const all = Array.from(root.querySelectorAll('h2, h3, h4'));
-    return all.filter(h => CONFIG.faqHeadingPattern.test((h.textContent || '').trim()))
-              .sort((a,b) => a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1);
-  };
+  $faqSections.each(function () {
+    var $sectionHead = $(this);
+    var $sectionEnd = findSectionEnd($sectionHead);
 
-  const extractQAFromSection = (sectionHeading) => {
-    const qa = [];
-    const sectionEnd = findSectionEnd(sectionHeading);
-    // Inside section: prefer h3/h4 as questions
-    const within = [];
-    let el = sectionHeading.nextElementSibling;
-    while (el && el !== sectionEnd) { within.push(el); el = el.nextElementSibling; }
-    const headings = within.filter(isHeading);
+    // Alle headings inni seksjonen
+    var $within = $sectionHead.nextUntil($sectionEnd.length ? $sectionEnd : null);
 
-    // Choose question headings
-    let questionHeads = headings.filter(h => CONFIG.questionLevels.has(levelOf(h)));
-    if (!questionHeads.length && CONFIG.allowH2QuestionsFallback) {
-      // Fallback: treat h2s inside the section as questions if no h3/h4 found
-      questionHeads = headings.filter(h => levelOf(h) === 2);
-    }
+    // Spørsmål = h3/h4 primært
+    var $qHeads = $within.filter('h3, h4');
+    // Fallback: hvis ingen h3/h4 i seksjonen, bruk h2 der inne
+    if (!$qHeads.length) $qHeads = $within.filter('h2');
 
-    questionHeads.forEach(h => {
-      const qText = (h.textContent || '').trim();
-      const ansNodes = collectAnswerNodes(h, levelOf(h), sectionEnd);
-      if (!ansNodes.length) return; // must have some content for answer
-      const answerHTML = tidyHTML(ansNodes.map(n => n.outerHTML || n.textContent || '').join('')); // allow basic HTML
+    $qHeads.each(function () {
+      var $q = $(this);
+      var qText = $q.text().trim();
+      if (!qText) return;
+
+      var ansNodes = collectAnswerNodes($q, levelOf(this), $sectionEnd);
+      if (!ansNodes.length) return;
+
+      // Behold enkel HTML i svaret (ok i JSON-LD). Unngå </script> å bryte blokken.
+      var answerHTML = tidyHTML(ansNodes.map(function(n){ return n.outerHTML || $(n).text(); }).join(''));
       if (!answerHTML) return;
 
-      let finalAnswer = answerHTML;
-      if (CONFIG.maxAnswerChars > 0 && finalAnswer.length > CONFIG.maxAnswerChars) {
-        finalAnswer = finalAnswer.slice(0, CONFIG.maxAnswerChars) + '…';
-      }
-
-      qa.push({
-        '@type': 'Question',
-        name: qText,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: finalAnswer
-        }
+      allQA.push({
+        "@type": "Question",
+        "name": qText,
+        "acceptedAnswer": { "@type": "Answer", "text": answerHTML }
       });
     });
-
-    return qa;
-  };
-
-  const alreadyHasFAQ = () => {
-    const scripts = Array.from(document.head.querySelectorAll('script[type="application/ld+json"]'));
-    return scripts.some(s => /"@type"\s*:\s*"FAQPage"/i.test(s.textContent || ''));
-  };
-
-  const injectJSONLD = (faqEntities) => {
-    if (!faqEntities.length) return false;
-    const data = {
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      mainEntity: faqEntities
-    };
-    const el = document.createElement('script');
-    el.type = 'application/ld+json';
-    el.setAttribute('data-generated', 'faq');
-    el.textContent = JSON.stringify(data, null, 2);
-    document.head.appendChild(el);
-    return true;
-  };
-
-  onReady(() => {
-    try {
-      if (!CONFIG.root) return;
-      if (alreadyHasFAQ()) { console.info('[FAQ-LD] Existing FAQPage JSON-LD found. Skipping.'); return; }
-
-      const sections = findFaqSectionHeadings(CONFIG.root);
-      if (!sections.length) { console.info('[FAQ-LD] No FAQ section heading found.'); return; }
-
-      const allQA = sections.flatMap(extractQAFromSection).filter(Boolean);
-      if (!allQA.length) { console.info('[FAQ-LD] FAQ section found, but no Q/A pairs detected.'); return; }
-
-      if (injectJSONLD(allQA)) {
-        console.log(`[FAQ-LD] Injected FAQPage JSON-LD with ${allQA.length} entries.`);
-      }
-    } catch (e) {
-      console.warn('[FAQ-LD] Error while generating JSON-LD:', e);
-    }
   });
-})();
+
+  if (!allQA.length) return;
+
+  var data = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": allQA
+  };
+
+  // Skriv kun til HEAD
+  var el = document.createElement('script');
+  el.type = 'application/ld+json';
+  el.setAttribute('data-generated', 'faq');
+  el.textContent = JSON.stringify(data, null, 2);
+  document.head.appendChild(el);
+});
 </script>
+
 </head>
 
 <body>
