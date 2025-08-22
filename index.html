@@ -28,7 +28,7 @@
     function isHeading(el) { return /^H[2-6]$/.test(el.tagName); }
     function levelOf(el) { return parseInt(el.tagName.substring(1), 10); }
 
-    // Unngå rå </script> i selve *koden* og i JSON-LD
+    // Unngå rå script i selve *koden* og i JSON-LD
     var END_SCRIPT = '<' + '/' + 'script';
     var END_SCRIPT_RE = new RegExp(END_SCRIPT, 'gi');
 
